@@ -4,7 +4,11 @@ Lowkey is a typing test inspired by [Monkeytype](https://monkeytype.com/).
 
 This is project is made as a side project, it is not meant for competitive type tests.
 
+[DEMO](lowkey.thect.cc)
+
 ## Getting Started
+
+Open [next.config.js](next.config.js:5) in a text editor, delete the `basePath` line. This value is added to make sure it build's propely on github pages, but it needs to be removed whem running locally.
 
 ```bash
 npm i
