@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 
+const tempWordSet = ["test", "hello", "world"];
+
 export default function Test({ ...props }) {
 	const [words, setWords] = useState([]);
 	const [wordElement, setWordElement] = useState([]);
@@ -8,14 +10,18 @@ export default function Test({ ...props }) {
 
 	const [letterPos, setLetterPos] = useState(0);
 	const [wordPos, setWordPos] = useState(0);
+	const [cursorPos, setCursorPos] = useState([0, 0]);
+
+	const [focus, setFocus] = useState(true);
 
 	// Word set init.
 	// TODO: Use random word set.
 	// TODO: Add restart
 	useEffect(() => {
-		setWords(["test", "hello", "world"]);
+		setWords(tempWordSet.map((item) => item + " "));
 		setLetterPos(0);
 		setWordPos(0);
+		setCursorPos([0, 0]);
 	}, []);
 
 	// Word status init.
@@ -23,7 +29,7 @@ export default function Test({ ...props }) {
 		const tempWordStatus = [];
 
 		for (let i = 0; i < words.length; i++) {
-			tempWordStatus.push(Array(words[i].length).fill(0));
+			tempWordStatus.push(Array(words[i].length + 1).fill(0));
 		}
 
 		setWordStatus(tempWordStatus);
@@ -44,7 +50,6 @@ export default function Test({ ...props }) {
 			`text-orange-300`,
 			`bg-gray-400 text-gray-800`,
 		];
-		let spaceCount = 0;
 
 		for (const item of words) {
 			let letterCount = -1;
@@ -52,13 +57,18 @@ export default function Test({ ...props }) {
 				item.split("").map((letter) => {
 					letterCount += 1;
 
-					// divided by two, becasue all elements are followed by a <span> with empty a space inside
 					const styleIndex =
-						wordStatus[tempElements.length / 2][letterCount];
+						wordStatus[tempElements.length][letterCount];
+
+					const isCursor =
+						tempElements.length === cursorPos[0] &&
+						letterCount === cursorPos[1];
 
 					return (
 						<span
-							className={`${letterStyle[styleIndex]}`}
+							className={`${letterStyle[styleIndex]} ${
+								isCursor ? "bg-teal-900" : ""
+							} duration-150 transition-all font-mono`}
 							key={`wordElement-${tempElements.length}-${letterCount}`}
 						>
 							{letter}
@@ -66,24 +76,26 @@ export default function Test({ ...props }) {
 					);
 				})
 			);
-			tempElements.push(
-				<span key={`wordElement-space-${spaceCount}`}> </span>
-			);
 			spaceCount++;
 		}
 		setWordElement(tempElements);
-	}, [words, wordStatus]);
+	}, [words, wordStatus, cursorPos]);
 
 	useEffect(() => {
-		inputArea.current.focus();
+		inputFocus();
 	}, []);
+
+	const inputFocus = () => {
+		inputArea.current.focus();
+		setFocus(true);
+	};
 
 	const inputHandler = (e) => {
 		const lastLetter = e.target.value.slice(-1);
 		if (lastLetter === " ") {
-			// console.log(e.target.value, words[wordPos]);
 			setWordPos(wordPos + 1);
 			setLetterPos(0);
+			setCursorPos([wordPos + 1, 0]);
 			e.target.value = "";
 			return;
 		}
@@ -91,17 +103,11 @@ export default function Test({ ...props }) {
 		if (wordStatus[wordPos] === undefined) return;
 
 		const tempStatus = [...wordStatus];
-
-		// console.log(tempStatus[wordPos], e.target.value, wordPos, letterPos);
-
-		// This part doesn't look very clean, as I what to leave space to
-		// modify it in the future. Preferably we want to display
-		// extra and false letters, but I havn't thought of aa good way
-		// implement it.
 		const wordLength = Math.max(
 			tempStatus[wordPos].length,
 			e.target.value.length
 		);
+
 		for (let idx = 0; idx < wordLength; idx++) {
 			if (words[wordPos][idx] === e.target.value[idx])
 				tempStatus[wordPos][idx] = 1;
@@ -115,7 +121,9 @@ export default function Test({ ...props }) {
 		}
 
 		setWordStatus(tempStatus);
-		setLetterPos(letterPos + 1);
+		setLetterPos(e.target.value.length);
+		setCursorPos([wordPos, letterPos + 1]);
+
 		return;
 	};
 
@@ -126,14 +134,20 @@ export default function Test({ ...props }) {
 
 	return (
 		<div {...props}>
-			<p className="font-medium">{wordElement}</p>
+			<p
+				className={`${focus ? "" : "blur-sm"} font-medium`}
+				onClick={inputFocus}
+			>
+				{wordElement}
+			</p>
 			<br />
 			<form>
 				<input
-					// className="opacity-0"
+					className="opacity-0"
 					ref={inputArea}
 					onChange={inputHandler}
 					onKeyDown={keydownHandler}
+					onBlur={() => setFocus(false)}
 				/>
 			</form>
 		</div>
