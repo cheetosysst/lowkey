@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { getRandomSet, getWordSet } from "../libs/word";
 
 const tempWordSet = ["test", "hello", "world"];
 
@@ -18,7 +19,11 @@ export default function Test({ ...props }) {
 	// TODO: Use random word set.
 	// TODO: Add restart
 	useEffect(() => {
-		setWords(tempWordSet.map((item) => item + " "));
+		Promise.all([getWordSet("english")]).then((data) => {
+			const randomSetData = getRandomSet(data[0], 25);
+			setWords(randomSetData.map((item) => item + " "));
+		});
+
 		setLetterPos(0);
 		setWordPos(0);
 		setCursorPos([0, 0]);
@@ -39,7 +44,8 @@ export default function Test({ ...props }) {
 		if (
 			wordStatus === undefined ||
 			!Array.isArray(wordStatus) ||
-			!wordStatus.length
+			!wordStatus.length ||
+			wordStatus.length !== words.length
 		)
 			return;
 
