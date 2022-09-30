@@ -16,6 +16,8 @@ export default function Test({ ...props }) {
 	const [focus, setFocus] = useState(true);
 
 	const initTest = () => {
+		inputArea.current.value = "";
+
 		Promise.all([getWordSet("english")]).then((data) => {
 			const randomSetData = getRandomSet(data[0], 25);
 			setWords(randomSetData.map((item) => item + " "));
@@ -145,6 +147,12 @@ export default function Test({ ...props }) {
 		e.preventDefault();
 	};
 
+	const restartHandler = (e) => {
+		e.preventDefault();
+		initTest();
+		inputFocus();
+	};
+
 	return (
 		<div {...props}>
 			<p
@@ -164,6 +172,9 @@ export default function Test({ ...props }) {
 					onKeyDown={keydownHandler}
 					onBlur={() => setFocus(false)}
 				/>
+				<button className="opacity-0" onClick={restartHandler}>
+					123
+				</button>
 			</form>
 		</div>
 	);
