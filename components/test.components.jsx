@@ -67,7 +67,7 @@ export default function Test({ ...props }) {
 					return (
 						<span
 							className={`${letterStyle[styleIndex]} ${
-								isCursor ? "bg-teal-900" : ""
+								isCursor ? "bg-neutral-700" : ""
 							} duration-150 transition-all font-mono`}
 							key={`wordElement-${tempElements.length}-${letterCount}`}
 						>
