@@ -137,7 +137,7 @@ export default function Test({ ...props }) {
 
 		setWordStatus(tempStatus);
 		setLetterPos(e.target.value.length);
-		setCursorPos([wordPos, letterPos + 1]);
+		setCursorPos([wordPos, e.target.value.length]);
 
 		return;
 	};

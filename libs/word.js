@@ -16,7 +16,7 @@ function getRandomSet(wordset, length) {
 	while (true) {
 		const index = Math.floor(Math.random() * wordset.wordset.length);
 		const word = wordset.wordset[index];
-		if (word === result[-1]) continue;
+		if (word === result[result.length - 1]) continue;
 		result.push(word.toLowerCase());
 		if (result.length === length) break;
 	}
