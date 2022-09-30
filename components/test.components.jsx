@@ -76,7 +76,6 @@ export default function Test({ ...props }) {
 					);
 				})
 			);
-			spaceCount++;
 		}
 		setWordElement(tempElements);
 	}, [words, wordStatus, cursorPos]);
