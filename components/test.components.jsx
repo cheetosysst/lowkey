@@ -134,7 +134,9 @@ export default function Test({ ...props }) {
 	return (
 		<div {...props}>
 			<p
-				className={`${focus ? "" : "blur-sm"} font-medium`}
+				className={`${
+					focus ? "" : "blur-sm"
+				} select-none font-medium transition-all duration-150`}
 				onClick={inputFocus}
 			>
 				{wordElement}
