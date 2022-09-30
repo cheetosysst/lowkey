@@ -15,10 +15,7 @@ export default function Test({ ...props }) {
 
 	const [focus, setFocus] = useState(true);
 
-	// Word set init.
-	// TODO: Use random word set.
-	// TODO: Add restart
-	useEffect(() => {
+	const initTest = () => {
 		Promise.all([getWordSet("english")]).then((data) => {
 			const randomSetData = getRandomSet(data[0], 25);
 			setWords(randomSetData.map((item) => item + " "));
@@ -27,6 +24,13 @@ export default function Test({ ...props }) {
 		setLetterPos(0);
 		setWordPos(0);
 		setCursorPos([0, 0]);
+	};
+
+	// Word set init.
+	// TODO: Use random word set.
+	// TODO: Add restart
+	useEffect(() => {
+		initTest();
 	}, []);
 
 	// Word status init.
@@ -98,10 +102,14 @@ export default function Test({ ...props }) {
 	const inputHandler = (e) => {
 		const lastLetter = e.target.value.slice(-1);
 		if (lastLetter === " ") {
+			e.target.value = "";
 			setWordPos(wordPos + 1);
+			if (wordPos + 1 === words.length) {
+				initTest();
+				return;
+			}
 			setLetterPos(0);
 			setCursorPos([wordPos + 1, 0]);
-			e.target.value = "";
 			return;
 		}
 
