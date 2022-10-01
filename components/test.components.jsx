@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { getRandomSet, getWordSet } from "../libs/word";
 
 const tempWordSet = ["test", "hello", "world"];
@@ -7,8 +7,11 @@ export default function Test({ ...props }) {
 	const [words, setWords] = useState([]);
 	const [wordElement, setWordElement] = useState([]);
 	const [wordStatus, setWordStatus] = useState([]);
-	const inputArea = useRef(null);
 	const [startTime, setStartTime] = useState(new Date(2000, 1, 1));
+	const [wordsetName, setWordsetName] = useState("english");
+
+	const inputArea = useRef(null);
+	const wordset = useMemo(() => getWordSet(wordsetName), [wordsetName]);
 
 	const [wordPos, setWordPos] = useState(0);
 	const [cursorPos, setCursorPos] = useState([0, 0]);
@@ -18,7 +21,7 @@ export default function Test({ ...props }) {
 	const initTest = () => {
 		inputArea.current.value = "";
 
-		Promise.all([getWordSet("english")]).then((data) => {
+		Promise.all([wordset]).then((data) => {
 			const randomSetData = getRandomSet(data[0], 25);
 			setWords(randomSetData.map((item) => item + " "));
 		});
