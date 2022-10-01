@@ -8,6 +8,7 @@ export default function Test({ ...props }) {
 	const [wordElement, setWordElement] = useState([]);
 	const [wordStatus, setWordStatus] = useState([]);
 	const inputArea = useRef(null);
+	const [startTime, setStartTime] = useState(new Date(2000, 1, 1));
 
 	const [wordPos, setWordPos] = useState(0);
 	const [cursorPos, setCursorPos] = useState([0, 0]);
@@ -24,6 +25,7 @@ export default function Test({ ...props }) {
 
 		setWordPos(0);
 		setCursorPos([0, 0]);
+		setStartTime(new Date(2000, 1, 1));
 	};
 
 	// Word set init.
@@ -75,8 +77,8 @@ export default function Test({ ...props }) {
 					return (
 						<span
 							className={`${letterStyle[styleIndex]} ${
-								isCursor ? "bg-neutral-700" : ""
-							} duration-300 transition-all font-mono`}
+								isCursor ? "bg-neutral-600" : ""
+							} duration-150 transition-all font-mono`}
 							key={`wordElement-${tempElements.length}-${letterCount}`}
 						>
 							{letter}
@@ -98,11 +100,22 @@ export default function Test({ ...props }) {
 	};
 
 	const inputHandler = (e) => {
+		if (
+			!cursorPos[0] &&
+			!cursorPos[1] &&
+			startTime.getTime() === new Date(2000, 1, 1).getTime()
+		)
+			setStartTime(new Date());
+
 		const lastLetter = e.target.value.slice(-1);
 		if (lastLetter === " ") {
 			e.target.value = "";
 			setWordPos(wordPos + 1);
 			if (wordPos + 1 === words.length) {
+				const deltaMinute =
+					(new Date().getTime() - startTime.getTime()) / 60000;
+				const wpm = Number((words.length / deltaMinute).toFixed(1));
+				console.log(wpm);
 				initTest();
 				return;
 			}
