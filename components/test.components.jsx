@@ -176,13 +176,16 @@ export default function Test({ ...props }) {
 			<br />
 			<form>
 				<input
-					className="opacity-0"
+					className="opacity-0 cursor-default"
 					ref={inputArea}
 					onChange={inputHandler}
 					onKeyDown={keydownHandler}
 					onBlur={() => setFocus(false)}
 				/>
-				<button className="opacity-0" onClick={restartHandler}>
+				<button
+					className="opacity-0 cursor-default"
+					onClick={restartHandler}
+				>
 					123
 				</button>
 			</form>
