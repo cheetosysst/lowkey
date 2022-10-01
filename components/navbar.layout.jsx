@@ -14,7 +14,7 @@ export default function Navbar({ children }) {
 				</ul>
 				<ul className="list-none items-center flex space-x-4 m-0 p-0 text-1xl text-gray-400">
 					<li>
-						<ButtonTransparent href="#">Test</ButtonTransparent>
+						<ButtonTransparent href="/">Test</ButtonTransparent>
 					</li>
 					<li>
 						<ButtonTransparent href="#">
@@ -22,7 +22,9 @@ export default function Navbar({ children }) {
 						</ButtonTransparent>
 					</li>
 					<li>
-						<ButtonTransparent href="#">About</ButtonTransparent>
+						<ButtonTransparent href="/about">
+							About
+						</ButtonTransparent>
 					</li>
 					<li>
 						<ButtonTransparent href="#">Login</ButtonTransparent>
