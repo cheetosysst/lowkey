@@ -9,7 +9,6 @@ export default function Test({ ...props }) {
 	const [wordStatus, setWordStatus] = useState([]);
 	const inputArea = useRef(null);
 
-	const [letterPos, setLetterPos] = useState(0);
 	const [wordPos, setWordPos] = useState(0);
 	const [cursorPos, setCursorPos] = useState([0, 0]);
 
@@ -23,14 +22,11 @@ export default function Test({ ...props }) {
 			setWords(randomSetData.map((item) => item + " "));
 		});
 
-		setLetterPos(0);
 		setWordPos(0);
 		setCursorPos([0, 0]);
 	};
 
 	// Word set init.
-	// TODO: Use random word set.
-	// TODO: Add restart
 	useEffect(() => {
 		initTest();
 	}, []);
@@ -80,7 +76,7 @@ export default function Test({ ...props }) {
 						<span
 							className={`${letterStyle[styleIndex]} ${
 								isCursor ? "bg-neutral-700" : ""
-							} duration-150 transition-all font-mono`}
+							} duration-300 transition-all font-mono`}
 							key={`wordElement-${tempElements.length}-${letterCount}`}
 						>
 							{letter}
@@ -110,7 +106,6 @@ export default function Test({ ...props }) {
 				initTest();
 				return;
 			}
-			setLetterPos(0);
 			setCursorPos([wordPos + 1, 0]);
 			return;
 		}
@@ -136,7 +131,6 @@ export default function Test({ ...props }) {
 		}
 
 		setWordStatus(tempStatus);
-		setLetterPos(e.target.value.length);
 		setCursorPos([wordPos, e.target.value.length]);
 
 		return;
@@ -158,7 +152,7 @@ export default function Test({ ...props }) {
 			<p
 				className={`${
 					focus ? "" : "blur-sm"
-				} select-none font-medium transition-all duration-150`}
+				} select-none font-medium transition-all duration-300`}
 				onClick={inputFocus}
 			>
 				{wordElement}
