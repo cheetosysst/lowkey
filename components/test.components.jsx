@@ -97,6 +97,10 @@ export default function Test({ ...props }) {
 		inputFocus();
 	}, []);
 
+	useEffect(() => {
+		inputFocus();
+	}, [props.panelStatus]);
+
 	const inputFocus = () => {
 		inputArea.current.focus();
 		setFocus(true);
@@ -164,7 +168,7 @@ export default function Test({ ...props }) {
 	};
 
 	return (
-		<div {...props}>
+		<div>
 			<p
 				className={`${
 					focus ? "" : "blur-sm"
