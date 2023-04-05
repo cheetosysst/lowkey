@@ -3,12 +3,19 @@ import Head from "next/head";
 import MainLayout from "../components/main.layout.jsx";
 
 import ArticleLink from "../components/articleLink.component.jsx";
+import MetaTags from "../components/meta.jsx";
 
 export default function About() {
 	return (
 		<>
 			<Head>
 				<title>Lowkey</title>
+				<MetaTags
+					name="About - Lowkey"
+					image="https://lowkey.thect.cc/Lowkey.png"
+					url="https://lowkey.thect.cc/about"
+					description="Yet another minimalistic typing test because why not lol"
+				/>
 			</Head>
 			<MainLayout>
 				<div className="container xl:w-3/5 md:w-2/3 mx-auto mt-32 text-2xl tracking-widest text-primary-content text-center">
