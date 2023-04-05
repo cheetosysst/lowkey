@@ -1,19 +1,10 @@
 import Head from "next/head";
-import Link from "next/link";
 
 import MainLayout from "../components/main.layout.jsx";
 
-export default function About() {
-	const articleLink = (name, href) => {
-		return (
-			<Link href={href}>
-				<a className="text-cyan-600 underline" target={"_blank"}>
-					{name}
-				</a>
-			</Link>
-		);
-	};
+import ArticleLink from "../components/articleLink.component.jsx";
 
+export default function About() {
 	return (
 		<>
 			<Head>
@@ -28,15 +19,15 @@ export default function About() {
 							</h1>
 							<p className="mb-6">
 								Lowkey is a typing test inspired by{" "}
-								{articleLink(
-									"MonkeyType",
-									"https://monkeytype.com"
-								)}
+								<ArticleLink
+									name="MonkeyType"
+									href="https://monkeytype.com"
+								/>
 								{" and "}
-								{articleLink(
-									"TypeTest.io",
-									"https://typetest.io"
-								)}
+								<ArticleLink
+									name="TypeTest.io"
+									href="https://typetest.io"
+								/>
 								.
 							</p>
 							<p className="mb-6">
@@ -66,10 +57,10 @@ export default function About() {
 							</h2>
 							<p className="mb-6">
 								File an issue on our{" "}
-								{articleLink(
-									"Github Repo",
-									"https://github.com/cheetosysst/lowkey/issues"
-								)}{" "}
+								<ArticleLink
+									name="Github Repo"
+									href="https://github.com/cheetosysst/lowkey/issues"
+								/>{" "}
 								if you noticed a new bug.
 							</p>
 						</section>

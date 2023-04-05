@@ -17,7 +17,7 @@ export default function Navbar({ children }) {
 						<ButtonTransparent href="/">Test</ButtonTransparent>
 					</li>
 					<li>
-						<ButtonTransparent href="#">
+						<ButtonTransparent href="/placeholder">
 							Leaderboard
 						</ButtonTransparent>
 					</li>
@@ -27,7 +27,9 @@ export default function Navbar({ children }) {
 						</ButtonTransparent>
 					</li>
 					<li>
-						<ButtonTransparent href="#">Login</ButtonTransparent>
+						<ButtonTransparent href="/placeholder">
+							Login
+						</ButtonTransparent>
 					</li>
 				</ul>
 			</div>
