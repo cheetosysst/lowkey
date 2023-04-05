@@ -22,18 +22,18 @@ export default function Page() {
 					<article className="text-xl text-gray-400">
 						<section>
 							<h1 className="text-gray-100 text-4xl mb-8">
-								Oh wait ... it's not implemented?
+								Oh wait ... it{"'"}s not implemented?
 							</h1>
 							<h2 className="text-gray-100 text-2xl italic mb-8">
 								🔫 Always has been
 							</h2>
 							<p className="mb-6">
-								Yeah, I'm too busy recently, and even when I
-								have time, I don't really feel like doing
+								Yeah, I{"'"}m too busy recently, and even when I
+								have time, I don{"'"}t really feel like doing
 								anything productive here.
 							</p>
 							<p className="mb-6">
-								Checkout lowkey's{" "}
+								Checkout lowkey{"'"}s{" "}
 								<ArticleLink
 									name="repo"
 									href="https://github.com/cheetosysst/lowkey"
