@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import { getRandomSet, getWordSet } from "../libs/word";
-
-const tempWordSet = ["test", "hello", "world"];
+import WPM from "./wpm.components";
 
 export default function Test({ ...props }) {
 	const [words, setWords] = useState([]);
@@ -17,6 +16,9 @@ export default function Test({ ...props }) {
 	const [cursorPos, setCursorPos] = useState([0, 0]);
 
 	const [focus, setFocus] = useState(true);
+
+	const [wpm, setWPM] = useState(undefined);
+	const [wpmVisible, setWPMVisible] = useState(false);
 
 	const initTest = () => {
 		inputArea.current.value = "";
@@ -111,8 +113,10 @@ export default function Test({ ...props }) {
 			!cursorPos[0] &&
 			!cursorPos[1] &&
 			startTime.getTime() === new Date(2000, 1, 1).getTime()
-		)
+		) {
 			setStartTime(new Date());
+			setWPMVisible(false);
+		}
 
 		const lastLetter = e.target.value.slice(-1);
 		if (lastLetter === " ") {
@@ -122,7 +126,8 @@ export default function Test({ ...props }) {
 				const deltaMinute =
 					(new Date().getTime() - startTime.getTime()) / 60000;
 				const wpm = Number((words.length / deltaMinute).toFixed(1));
-				console.log(wpm);
+				setWPM(wpm);
+				setWPMVisible(true);
 				initTest();
 				return;
 			}
@@ -177,6 +182,7 @@ export default function Test({ ...props }) {
 			>
 				{wordElement}
 			</p>
+			<WPM wpm={wpm} show={wpmVisible} />
 			<br />
 			<form>
 				<input
