@@ -27,6 +27,7 @@ export default function Home() {
 			window.removeEventListener("keydown", panelToggle);
 		};
 	}, [showPanel]);
+
 	return (
 		<>
 			<Head>

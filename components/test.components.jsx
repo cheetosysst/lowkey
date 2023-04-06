@@ -2,9 +2,15 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import { getRandomSet, getWordSet } from "../libs/word";
 import WPM from "./wpm.components";
 
+const LETTER_STYLE = [
+	`text-gray-400`,
+	`text-gray-200`,
+	`text-orange-300`,
+	`bg-gray-400 text-gray-800`,
+];
+
 export default function Test({ ...props }) {
 	const [words, setWords] = useState([]);
-	const [wordElement, setWordElement] = useState([]);
 	const [wordStatus, setWordStatus] = useState([]);
 	const [startTime, setStartTime] = useState(new Date(2000, 1, 1));
 	const [wordsetName, setWordsetName] = useState("english");
@@ -18,7 +24,7 @@ export default function Test({ ...props }) {
 	const [focus, setFocus] = useState(true);
 
 	const [wpm, setWPM] = useState(undefined);
-	const [wpmVisible, setWPMVisible] = useState(false);
+	const [testState, setTestState] = useState(false);
 
 	const initTest = () => {
 		inputArea.current.value = "";
@@ -41,59 +47,32 @@ export default function Test({ ...props }) {
 	// Word status init.
 	useEffect(() => {
 		const tempWordStatus = [];
+		const wordsLength = words.length;
 
-		for (let i = 0; i < words.length; i++) {
+		for (let i = 0; i < wordsLength; i++)
 			tempWordStatus.push(Array(words[i].length + 1).fill(0));
-		}
 
 		setWordStatus(tempWordStatus);
 	}, [words]);
 
-	useEffect(() => {
-		if (
-			wordStatus === undefined ||
-			!Array.isArray(wordStatus) ||
-			!wordStatus.length ||
-			wordStatus.length !== words.length
-		)
-			return;
-
-		const tempElements = [];
-		const letterStyle = [
-			`text-gray-400`,
-			`text-gray-200`,
-			`text-orange-300`,
-			`bg-gray-400 text-gray-800`,
-		];
-
-		for (const item of words) {
-			let letterCount = -1;
-			tempElements.push(
-				item.split("").map((letter) => {
-					letterCount += 1;
-
-					const styleIndex =
-						wordStatus[tempElements.length][letterCount];
-
-					const isCursor =
-						tempElements.length === cursorPos[0] &&
-						letterCount === cursorPos[1];
-
-					return (
-						<span
-							className={`${letterStyle[styleIndex]} ${
-								isCursor ? "bg-neutral-600" : ""
-							} duration-150 transition-all font-mono`}
-							key={`wordElement-${tempElements.length}-${letterCount}`}
-						>
-							{letter}
-						</span>
-					);
-				})
-			);
-		}
-		setWordElement(tempElements);
-	}, [words, wordStatus, cursorPos]);
+	const wordElements = words.map((value, indexWord) => {
+		if (!value || !wordStatus.length) return false;
+		return value
+			.split("")
+			.map((value, indexLetter) => (
+				<Letters
+					key={`letterElement-${indexWord}-${indexLetter}`}
+					styleText={LETTER_STYLE[wordStatus[indexWord][indexLetter]]}
+					styleCursor={
+						indexWord === cursorPos[0] &&
+						indexLetter === cursorPos[1]
+							? "bg-neutral-600"
+							: ""
+					}
+					letter={value}
+				/>
+			));
+	});
 
 	useEffect(() => {
 		inputFocus();
@@ -115,7 +94,7 @@ export default function Test({ ...props }) {
 			startTime.getTime() === new Date(2000, 1, 1).getTime()
 		) {
 			setStartTime(new Date());
-			setWPMVisible(false);
+			setTestState(false);
 		}
 
 		const lastLetter = e.target.value.slice(-1);
@@ -127,7 +106,7 @@ export default function Test({ ...props }) {
 					(new Date().getTime() - startTime.getTime()) / 60000;
 				const wpm = Number((words.length / deltaMinute).toFixed(1));
 				setWPM(wpm);
-				setWPMVisible(true);
+				setTestState(true);
 				initTest();
 				return;
 			}
@@ -180,9 +159,9 @@ export default function Test({ ...props }) {
 				} select-none font-medium transition-all duration-300`}
 				onClick={inputFocus}
 			>
-				{wordElement}
+				{wordElements}
 			</p>
-			<WPM wpm={wpm} show={wpmVisible} />
+			<WPM wpm={wpm} show={testState} />
 			<br />
 			<form>
 				<input
@@ -200,5 +179,16 @@ export default function Test({ ...props }) {
 				</button>
 			</form>
 		</div>
+	);
+}
+
+function Letters({ letter, styleCursor, styleText, ...props }) {
+	return (
+		<span
+			className={`duration-150 transition-all font-mono ${styleText} ${styleCursor}`}
+			{...props}
+		>
+			{letter}
+		</span>
 	);
 }
