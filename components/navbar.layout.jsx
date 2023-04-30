@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { ButtonTransparent, Button } from "./button.components";
+import { useContext } from "react";
+import { AuthContext } from "../libs/auth";
 
 export default function Navbar({ children }) {
+	const { auth } = useContext(AuthContext);
+
 	return (
 		<>
 			<div className="container my-4 w-10/12 xl:w-1/2 mx-auto flex gap-2 justify-around">
@@ -27,8 +31,8 @@ export default function Navbar({ children }) {
 						</ButtonTransparent>
 					</li>
 					<li>
-						<ButtonTransparent href="/placeholder">
-							Login
+						<ButtonTransparent href={auth ? "/logout" : "/login"}>
+							{auth ? "Logout" : "Login"}
 						</ButtonTransparent>
 					</li>
 				</ul>
