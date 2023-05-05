@@ -1,11 +1,11 @@
 import Link from "next/link";
+import Router from "next/router";
 import { ButtonTransparent, Button } from "./button.components";
 import { useContext } from "react";
 import { AuthContext } from "../libs/auth";
+import { getBaseUrl } from "../libs/url";
 
-export default function Navbar({ children }) {
-	const { auth } = useContext(AuthContext);
-
+export default function Navbar({}) {
 	return (
 		<>
 			<div className="container my-4 w-10/12 xl:w-1/2 mx-auto flex gap-2 justify-around">
@@ -31,12 +31,36 @@ export default function Navbar({ children }) {
 						</ButtonTransparent>
 					</li>
 					<li>
-						<ButtonTransparent href={auth ? "/logout" : "/login"}>
+						{/* <ButtonTransparent href={auth ? "/logout" : "/login"}>
 							{auth ? "Logout" : "Login"}
-						</ButtonTransparent>
+						</ButtonTransparent> */}
+						<LoginButton />
 					</li>
 				</ul>
 			</div>
 		</>
 	);
 }
+
+const LoginButton = ({ ...props }) => {
+	const { auth, setAuth } = useContext(AuthContext);
+
+	const logoutHandler = async (e) => {
+		e.preventDefault();
+
+		if (!auth) {
+			Router.push("/login");
+			return;
+		}
+		const result = await fetch(`${getBaseUrl()}/api/logout`);
+
+		setAuth(false);
+		Router.push("/");
+	};
+
+	return (
+		<ButtonTransparent onClick={logoutHandler} href="#" {...props}>
+			{auth ? "Logout" : "Login"}
+		</ButtonTransparent>
+	);
+};

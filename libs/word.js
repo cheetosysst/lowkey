@@ -1,3 +1,5 @@
+import { getBaseUrl } from "./url";
+
 /**
  * Fetch wordset from "/public/wordset/"
  * @param {string} name test
@@ -5,7 +7,7 @@
  */
 function getWordSet(name) {
 	return new Promise(async (resolve, reject) => {
-		const respond = await fetch(`/wordset/${name}.json`);
+		const respond = await fetch(`${getBaseUrl()}/wordset/${name}.json`);
 		if (!respond.ok) reject(respond.statusText);
 		resolve(await respond.json());
 	});

@@ -1,10 +1,19 @@
 import conn from "../../libs/database";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getAuth } from "../../libs/auth";
 
 export default async function handler(req, res) {
+	// If user is already logged in
+
+	if (getAuth(req) !== undefined) {
+		res.status(200).json({ message: "Authorized" });
+		return;
+	}
+
 	const { username, password } = req.body;
 
+	// If either password or username is incorrect
 	if (!(username && password)) {
 		res.status(400).json({ message: "Bad credentials" });
 		return;
@@ -42,12 +51,10 @@ export default async function handler(req, res) {
 		}
 	);
 
-	res.setHeader("Set-Cookie", [
-		`token=${token}`,
-		"Max-Age: 2600000",
-		"SameSite=Strict",
-		"secure",
-	]);
+	res.setHeader(
+		"Set-Cookie",
+		`token=${token}; HttpOnly; Secure; Max-Age=2592000; SameSite=Strict`
+	);
 
 	res.status(200).json({ message: "Authorized" });
 }

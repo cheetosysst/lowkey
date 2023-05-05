@@ -1,6 +1,7 @@
 import conn from "../../libs/database";
 import bcrypt from "bcrypt";
 
+// TODO add more validation
 export default async function handler(req, res) {
 	const { username, password, email, nickname } = req.body;
 

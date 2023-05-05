@@ -1,4 +1,4 @@
-export function getBaseUrl() {
+export function getBaseUrl(): string {
 	if (typeof window !== "undefined") return "";
 
 	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
