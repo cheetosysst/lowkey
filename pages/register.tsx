@@ -1,7 +1,16 @@
 import MainLayout from "../components/main.layout";
-import { FormEventHandler, useState } from "react";
+import { FormEvent, FormEventHandler, useState } from "react";
 import type { ReactElement } from "react";
 import Router from "next/router";
+import { getBaseUrl } from "../libs/url";
+import { WarningMessage } from "../components/message";
+import {
+	FormEmail,
+	FormEnglish,
+	FormPassword,
+	FormSubmitButton,
+	FormUnicode,
+} from "../components/form";
 
 interface registerEventHandler extends HTMLFormElement {
 	username: HTMLInputElement;
@@ -11,9 +20,19 @@ interface registerEventHandler extends HTMLFormElement {
 }
 
 export default function Home(): ReactElement {
-	const loginHandler: FormEventHandler = async (e) => {
+	const [formError, setFormError] = useState(false);
+	const [formErrorMessage, setFormErrorMessage] = useState("");
+
+	const loginHandler: FormEventHandler = async (e: FormEvent) => {
 		e.preventDefault();
+
 		const target = e.target as registerEventHandler;
+
+		if (target.checkValidity()) {
+			setFormError(true);
+			setFormErrorMessage("Invalid input, please check again");
+			return;
+		}
 
 		const body = {
 			username: target.username.value,
@@ -21,82 +40,35 @@ export default function Home(): ReactElement {
 			password: target.password.value,
 			email: target.email.value,
 		};
-		console.log(target.email.validity);
 
-		const result = await fetch("./api/register", {
+		const result = await fetch(`${getBaseUrl()}/api/register`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(body),
 		});
 		const data = await result.json();
-		if (data.instruction === "login") Router.push("/login");
+		if (data.message === "login") Router.push("/login");
+
+		setFormError(true);
+		setFormErrorMessage(data.full_message);
 	};
 
 	return (
-		<>
-			<MainLayout>
-				<div className="container mx-auto flex justify-center">
-					<form onSubmit={loginHandler}>
-						<FormElement
-							type="text"
-							id="username"
-							text="Username"
-							pattern="[0-9a-zA-Z]{1,64}"
-						/>
-						<FormElement
-							type="password"
-							id="password"
-							text="Password"
-							pattern="[0-9a-zA-Z]{1,64}"
-						/>
-						<FormElement type="email" id="email" text="Email" />
-						<FormElement
-							type="text"
-							id="nickname"
-							text="Nickname"
-							pattern="*{1,64}"
-						/>
-						<div className="flex justify-end">
-							<input
-								type="submit"
-								className="cursor-pointer bg-transparent border-2 border-gray-100/20 hover:border-black/5 hover:bg-slate-800 transition-all duration-200 p-2 rounded-md text-slate-100"
-								value={`Register`}
-							></input>
-						</div>
-					</form>
-				</div>
-			</MainLayout>
-		</>
+		<MainLayout>
+			<div className="container mx-auto flex justify-center">
+				<form onSubmit={loginHandler}>
+					<FormEnglish id="username" text="Username" />
+					<FormPassword id="password" text="Password" />
+					<FormEmail id="email" text="Email" />
+					<FormUnicode id="nickname" text="Nickname" />
+					<div className="flex justify-end">
+						<FormSubmitButton text="Register" />
+					</div>
+					<WarningMessage show={formError}>
+						{formErrorMessage}
+					</WarningMessage>
+				</form>
+			</div>
+		</MainLayout>
 	);
 }
-
-const validateEmail = (email: string) => {};
-
-const FormElement = ({
-	type,
-	className,
-	id,
-	text,
-	pattern,
-	...props
-}: {
-	type: string;
-	className?: string | undefined;
-	text: string;
-	pattern?: string;
-	id: string;
-}) => (
-	<div className="flex flex-col mb-4">
-		<label htmlFor={id}>{text}</label>
-		<input
-			type={type}
-			className={`text-slate-100
-				outline-none cursor-text transition-all duration-200 
-				border-2 valid:border-gray-100/20 focus:border-gray-100/50 hover:border-gray-100/80 invalid:border-red-500 rounded-md
-				bg-transparent p-2  ${className}`}
-			pattern={pattern}
-			id={id}
-			{...props}
-		></input>
-	</div>
-);

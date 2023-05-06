@@ -1,6 +1,5 @@
-import Link from "next/link";
 import Router from "next/router";
-import { ButtonTransparent, Button } from "./button.components";
+import { ButtonTransparent } from "./button.components";
 import { useContext } from "react";
 import { AuthContext } from "../libs/auth";
 import { getBaseUrl } from "../libs/url";
@@ -31,9 +30,6 @@ export default function Navbar({}) {
 						</ButtonTransparent>
 					</li>
 					<li>
-						{/* <ButtonTransparent href={auth ? "/logout" : "/login"}>
-							{auth ? "Logout" : "Login"}
-						</ButtonTransparent> */}
 						<LoginButton />
 					</li>
 				</ul>
@@ -43,24 +39,32 @@ export default function Navbar({}) {
 }
 
 const LoginButton = ({ ...props }) => {
-	const { auth, setAuth } = useContext(AuthContext);
+	const { state, dispatch } = useContext(AuthContext);
+	const isAuth = state.isAuth;
 
-	const logoutHandler = async (e) => {
+	const logoutHandler = async (e: Event) => {
 		e.preventDefault();
 
-		if (!auth) {
+		if (!state.isAuth) {
 			Router.push("/login");
 			return;
 		}
+
 		const result = await fetch(`${getBaseUrl()}/api/logout`);
 
-		setAuth(false);
+		dispatch({ type: "CHANGE_AUTH", state: false });
 		Router.push("/");
+		return;
 	};
 
 	return (
-		<ButtonTransparent onClick={logoutHandler} href="#" {...props}>
-			{auth ? "Logout" : "Login"}
+		<ButtonTransparent
+			className=""
+			onClick={logoutHandler}
+			href="#"
+			{...props}
+		>
+			{isAuth ? "Logout" : "Login"}
 		</ButtonTransparent>
 	);
 };

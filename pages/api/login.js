@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 			WHERE email = "${username}" OR id = "${username}";`
 		)
 		.catch((err) => {
-			console.log(err);
+			console.error(err);
 			res.status(500).json(err);
 		});
 

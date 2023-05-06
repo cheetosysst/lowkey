@@ -1,34 +1,49 @@
 import Router from "next/router";
 import MainLayout from "../components/main.layout";
-import { useContext } from "react";
+import { FormEvent, FormEventHandler, useContext } from "react";
 import { AuthContext } from "../libs/auth";
+import { getBaseUrl } from "../libs/url";
+import { ButtonTransparent } from "../components/button.components";
+
+interface loginEventHandler extends HTMLFormElement {
+	username: HTMLInputElement;
+	password: HTMLInputElement;
+}
 
 export default function Home() {
-	const { auth, setAuth } = useContext(AuthContext);
+	const auth = useContext(AuthContext);
 
-	const loginHandler = async (e) => {
+	if (auth.state.isAuth) {
+		Router.push("/");
+	}
+
+	const loginHandler: FormEventHandler = async (e: FormEvent) => {
 		e.preventDefault();
 
-		const result = await fetch("./api/login", {
+		const target = e.target as loginEventHandler;
+
+		const data = await fetch("./api/login", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				username: e.target.id.value,
-				password: e.target.password.value,
+				username: target.username.value,
+				password: target.password.value,
 			}),
-		}).catch((e) => {
-			console.error("failed to login", e);
-			// TODO add login failed message.
-		});
-
-		const data = await result.json();
+		})
+			.then((data) => {
+				return data.json();
+			})
+			.catch((e) => {
+				console.error("failed to login", e);
+				// TODO add login failed message.
+			});
 
 		if (data.message !== "Authorized") {
-			console.log("fail to authorize");
+			console.error("fail to authorize");
 			return; // TODO Add login failed message
 		}
 
-		setAuth(true);
+		auth.dispatch({ type: "CHANGE_AUTH", state: true });
 		Router.push("/");
 	};
 
@@ -43,7 +58,7 @@ export default function Home() {
 							<input
 								type="text"
 								className="bg-transparent textarea outline-none resize border-neutral-700 border-2 rounded-md h-8 p-2"
-								id="id"
+								id="username"
 								autoFocus
 								inputMode="text"
 							/>
@@ -58,7 +73,13 @@ export default function Home() {
 								inputMode="text"
 							/>
 						</div>
-						<div className="flex justify-end">
+						<div className="flex justify-between">
+							<ButtonTransparent
+								className=""
+								href={`${getBaseUrl()}/register`}
+							>
+								Register
+							</ButtonTransparent>
 							<input
 								type="submit"
 								className="cursor-pointer bg-transparent border-2 border-gray-100/20 hover:border-black/5 hover:bg-slate-800 transition-all duration-200 p-2 rounded-md text-slate-100"
