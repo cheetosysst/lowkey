@@ -70,15 +70,7 @@ export const FormEmail = ({
 }: {
 	id: string;
 	text: string;
-}) => (
-	<FormElement
-		type="email"
-		id={id}
-		text={text}
-		pattern="^\w{1,64}$"
-		{...props}
-	/>
-);
+}) => <FormElement type="email" id={id} text={text} {...props} />;
 
 export const FormUnicode = ({
 	id,
