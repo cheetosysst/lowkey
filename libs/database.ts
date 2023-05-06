@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { connect } from "@planetscale/database";
 
 const config = {
