@@ -1,4 +1,4 @@
-import Navbar from "./navbar.layout.jsx";
+import Navbar from "./navbar.layout";
 import { useState, useEffect } from "react";
 
 export default function MainLayout({ children }) {

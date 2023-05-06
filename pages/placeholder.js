@@ -1,7 +1,5 @@
 import Head from "next/head";
-
 import MainLayout from "../components/main.layout.jsx";
-
 import ArticleLink from "../components/articleLink.component.jsx";
 import MetaTags from "../components/meta.jsx";
 

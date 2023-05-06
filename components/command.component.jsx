@@ -4,10 +4,6 @@ function CommandPanel({ ...props }) {
 	const panelInput = useRef(null);
 
 	useEffect(() => {
-		console.log(props);
-	}, [props]);
-
-	useEffect(() => {
 		panelInput.current.value = "";
 		panelInput.current.focus();
 	}, [props.show]);
