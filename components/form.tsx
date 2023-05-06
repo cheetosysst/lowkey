@@ -56,8 +56,8 @@ export const FormEnglish = ({
 }) => (
 	<FormElement
 		type="text"
-		id="username"
-		text="Username"
+		id={id}
+		text={text}
 		pattern="^\w{1,64}$"
 		{...props}
 	/>
@@ -73,8 +73,8 @@ export const FormEmail = ({
 }) => (
 	<FormElement
 		type="email"
-		id="username"
-		text="Username"
+		id={id}
+		text={text}
 		pattern="^\w{1,64}$"
 		{...props}
 	/>
