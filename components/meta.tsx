@@ -1,11 +1,26 @@
-export default function MetaTags({ title, url, description, name, image }) {
+export default function MetaTags({
+	title,
+	url,
+	description,
+	name,
+	image,
+}: {
+	title?: string;
+	url: string;
+	description: string;
+	name: string;
+	image: string;
+}) {
 	// https://github.com/cheetosysst/maraho/blob/main/components/meta.component.jsx
 	return (
 		<>
 			<meta name="description" content={description} />
 			<meta property="og:url" content={`${url}`} />
 			<meta property="og:type" content="website" />
-			<meta property="og:title" content={`${name}`} />
+			<meta
+				property="og:title"
+				content={title ? `${name} - ${title}` : `${name}`}
+			/>
 			<meta property="og:description" content={`${description}`} />
 			<meta property="og:image" content={`${image}`} />
 

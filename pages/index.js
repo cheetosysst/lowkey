@@ -4,7 +4,7 @@ import { CommandPanel } from "../components/command.component.jsx";
 
 import MainLayout from "../components/main.layout.jsx";
 import Test from "../components/test.components.jsx";
-import MetaTags from "../components/meta.jsx";
+import MetaTags from "../components/meta";
 
 export default function Home() {
 	const [showPanel, setShowPanel] = useState(false);
@@ -37,6 +37,7 @@ export default function Home() {
 					image="https://lowkey.thect.cc/Lowkey.png"
 					url="https://lowkey.thect.cc/"
 					description="Yet another minimalistic typing test because why not lol"
+					title=""
 				/>
 			</Head>
 			<MainLayout>
