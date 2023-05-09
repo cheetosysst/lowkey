@@ -29,8 +29,8 @@ export default function Test({ ...props }) {
 	const initTest = () => {
 		inputArea.current.value = "";
 
-		Promise.all([wordset]).then((data) => {
-			const randomSetData = getRandomSet(data[0], 25);
+		Promise.race([wordset]).then((data) => {
+			const randomSetData = getRandomSet(data.wordset, 25);
 			setWords(randomSetData.map((item) => item + " "));
 		});
 
