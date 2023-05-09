@@ -12,16 +12,16 @@ export const FormElement = ({
 	pattern?: string;
 	id: string;
 }) => (
-	<div className="flex flex-col mb-4" {...props}>
+	<div className="mb-4 flex flex-col" {...props}>
 		<label className={``} htmlFor={id}>
 			{text}
 		</label>
 		<input
 			type={type}
-			className={`text-slate-100
-				outline-none cursor-text transition-all duration-200 
-				border-2 border-gray-100/20 invalid:border-red-500/70 focus:border-gray-100/50 hover:border-gray-100/80 rounded-md
-				bg-transparent p-2 
+			className={`cursor-text
+				rounded-md border-2 border-gray-100/20 bg-transparent 
+				p-2 text-slate-100 outline-none transition-all duration-200 invalid:border-red-500/70
+				hover:border-gray-100/80 focus:border-gray-100/50 
 			${className}`}
 			pattern={pattern}
 			id={id}
@@ -92,7 +92,7 @@ export const FormUnicode = ({
 export const FormSubmitButton = ({ text, ...props }: { text: string }) => (
 	<input
 		type="submit"
-		className="cursor-pointer bg-transparent border-2 border-gray-100/20 hover:border-black/5 hover:bg-slate-800 transition-all duration-200 p-2 rounded-md text-slate-100"
+		className="cursor-pointer rounded-md border-2 border-gray-100/20 bg-transparent p-2 text-slate-100 transition-all duration-200 hover:border-black/5 hover:bg-slate-800"
 		value={text}
 		{...props}
 	/>

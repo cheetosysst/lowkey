@@ -40,7 +40,7 @@ export default function Home() {
 				/>
 			</Head>
 			<MainLayout>
-				<div className="container xl:w-3/5 md:w-2/3 mx-auto mt-60 text-2xl tracking-widest text-primary-content text-center">
+				<div className="text-primary-content container mx-auto mt-60 text-center text-2xl tracking-widest md:w-2/3 xl:w-3/5">
 					<Test panelStatus={showPanel} />
 				</div>
 			</MainLayout>

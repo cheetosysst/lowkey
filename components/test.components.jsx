@@ -165,14 +165,14 @@ export default function Test({ ...props }) {
 			<br />
 			<form>
 				<input
-					className="opacity-0 cursor-default"
+					className="cursor-default opacity-0"
 					ref={inputArea}
 					onChange={inputHandler}
 					onKeyDown={keydownHandler}
 					onBlur={() => setFocus(false)}
 				/>
 				<button
-					className="opacity-0 cursor-default"
+					className="cursor-default opacity-0"
 					onClick={restartHandler}
 				>
 					123
@@ -185,7 +185,7 @@ export default function Test({ ...props }) {
 function Letters({ letter, styleCursor, styleText, ...props }) {
 	return (
 		<span
-			className={`duration-150 transition-all font-mono ${styleText} ${styleCursor}`}
+			className={`font-mono transition-all duration-150 ${styleText} ${styleCursor}`}
 			{...props}
 		>
 			{letter}

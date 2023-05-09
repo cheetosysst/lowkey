@@ -30,7 +30,7 @@ const ButtonNavbar = ({
 	...props
 }: ButtonProp) => (
 	<Button
-		className={`bg-slate-800 p-2 rounded-md text-slate-100 ${
+		className={`rounded-md bg-slate-800 p-2 text-slate-100 ${
 			className ? className : ""
 		}`}
 		href={href}
@@ -49,7 +49,7 @@ const ButtonTransparent = ({
 	...props
 }: ButtonProp) => (
 	<Button
-		className={`bg-transparent hover:bg-slate-800 transition-all duration-200 p-2 rounded-md text-slate-100 ${
+		className={`rounded-md bg-transparent p-2 text-slate-100 transition-all duration-200 hover:bg-slate-800 ${
 			className ? className : ""
 		}`}
 		href={href}

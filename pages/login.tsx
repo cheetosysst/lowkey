@@ -57,7 +57,7 @@ export default function Home() {
 							<br />
 							<input
 								type="text"
-								className="bg-transparent textarea outline-none resize border-neutral-700 border-2 rounded-md h-8 p-2"
+								className="textarea h-8 resize rounded-md border-2 border-neutral-700 bg-transparent p-2 outline-none"
 								id="username"
 								autoFocus
 								inputMode="text"
@@ -68,7 +68,7 @@ export default function Home() {
 							<br />
 							<input
 								type="password"
-								className="bg-transparent textarea outline-none resize border-neutral-700 border-2 rounded-md h-8 p-2"
+								className="textarea h-8 resize rounded-md border-2 border-neutral-700 bg-transparent p-2 outline-none"
 								id="password"
 								inputMode="text"
 							/>
@@ -82,7 +82,7 @@ export default function Home() {
 							</ButtonTransparent>
 							<input
 								type="submit"
-								className="cursor-pointer bg-transparent border-2 border-gray-100/20 hover:border-black/5 hover:bg-slate-800 transition-all duration-200 p-2 rounded-md text-slate-100"
+								className="cursor-pointer rounded-md border-2 border-gray-100/20 bg-transparent p-2 text-slate-100 transition-all duration-200 hover:border-black/5 hover:bg-slate-800"
 								value={`Login`}
 							></input>
 						</div>

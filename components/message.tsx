@@ -14,7 +14,7 @@ export const WarningMessage = ({
 		<div
 			className={`${className} ${
 				show ? "scale-y-100" : "scale-y-0"
-			} animate-pulse border-2 border-red-500 rounded p-2 mt-4 transition-transform transform `}
+			} mt-4 transform animate-pulse rounded border-2 border-red-500 p-2 transition-transform `}
 			{...props}
 		>
 			{children}

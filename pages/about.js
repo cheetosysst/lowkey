@@ -18,10 +18,10 @@ export default function About() {
 				/>
 			</Head>
 			<MainLayout>
-				<div className="container xl:w-3/5 md:w-2/3 mx-auto mt-32 text-2xl tracking-widest text-primary-content text-center">
+				<div className="text-primary-content container mx-auto mt-32 text-center text-2xl tracking-widest md:w-2/3 xl:w-3/5">
 					<article className="text-xl text-gray-400">
 						<section>
-							<h1 className="text-gray-100 text-4xl mb-8">
+							<h1 className="mb-8 text-4xl text-gray-100">
 								About
 							</h1>
 							<p className="mb-6">
@@ -44,7 +44,7 @@ export default function About() {
 							</p>
 						</section>
 						<section>
-							<h2 className="text-gray-100 text-2xl mt-12 mb-4">
+							<h2 className="mt-12 mb-4 text-2xl text-gray-100">
 								Warning
 							</h2>
 							<p className="mb-6">
@@ -59,7 +59,7 @@ export default function About() {
 							</p>
 						</section>
 						<section>
-							<h2 className="text-gray-100 text-2xl mt-12 mb-4">
+							<h2 className="mt-12 mb-4 text-2xl text-gray-100">
 								Contact
 							</h2>
 							<p className="mb-6">

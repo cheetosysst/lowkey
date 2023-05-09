@@ -16,17 +16,17 @@ function CommandPanel({ ...props }) {
 	return (
 		<>
 			<div
-				className={`absolute flex w-screen h-screen top-0 z-10 ${
+				className={`absolute top-0 z-10 flex h-screen w-screen ${
 					props.show ? "" : "hidden"
 				} justify-center backdrop-blur-sm`}
 			>
-				<div className="flex mt-40 align-middle bg-neutral-800 overflow-hidden rounded-2xl shadow-md w-1/3 h-1/2">
+				<div className="mt-40 flex h-1/2 w-1/3 overflow-hidden rounded-2xl bg-neutral-800 align-middle shadow-md">
 					<form className="h-10 w-full">
 						<input
 							ref={panelInput}
 							onKeyDown={keydownHandler}
 							type="text"
-							className="h-10 w-full bg-neutral-700 border-none outline-none shadow-md px-5 py-4"
+							className="h-10 w-full border-none bg-neutral-700 px-5 py-4 shadow-md outline-none"
 						/>
 					</form>
 				</div>
