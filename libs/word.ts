@@ -22,9 +22,8 @@ async function getWordSet(name: string): Promise<WordSetFile> {
  * @param length Length of the random word set
  */
 function getRandomSet(wordset: WordSet, length: number) {
-	return Array.from(
-		{ length: length },
-		() => wordset[Math.floor(Math.random() * wordset.length)]
+	return Array.from({ length: length }, () =>
+		wordset[Math.floor(Math.random() * wordset.length)].toLowerCase()
 	);
 }
 
