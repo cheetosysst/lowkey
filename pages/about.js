@@ -1,9 +1,9 @@
 import Head from "next/head";
 
-import MainLayout from "../components/main.layout.jsx";
+import MainLayout from "../components/main.layout";
 
-import ArticleLink from "../components/articleLink.component.jsx";
-import MetaTags from "../components/meta.jsx";
+import ArticleLink from "../components/articleLink.component";
+import MetaTags from "../components/meta";
 
 export default function About() {
 	return (

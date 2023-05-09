@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { CommandPanel } from "../components/command.component.jsx";
+import { CommandPanel } from "../components/command.component";
 
-import MainLayout from "../components/main.layout.jsx";
-import Test from "../components/test.components.jsx";
+import MainLayout from "../components/main.layout";
+import Test from "../components/test.components";
 import MetaTags from "../components/meta";
 
 export default function Home() {
