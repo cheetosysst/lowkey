@@ -1,7 +1,7 @@
 import Head from "next/head";
 import MainLayout from "../components/main.layout";
-import ArticleLink from "../components/articleLink.component";
 import MetaTags from "../components/meta";
+import { ArticleLink } from "../components/button.components";
 
 export default function Page() {
 	return (

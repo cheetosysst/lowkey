@@ -60,4 +60,14 @@ const ButtonTransparent = ({
 	</Button>
 );
 
-export { Button, ButtonNavbar, ButtonTransparent };
+function ArticleLink({ name, href, ...props }: { name: string; href: string }) {
+	return (
+		<Link href={href} {...props}>
+			<a className="text-cyan-600 underline" target={"_blank"}>
+				{name}
+			</a>
+		</Link>
+	);
+}
+
+export { Button, ButtonNavbar, ButtonTransparent, ArticleLink };

@@ -1,7 +1,7 @@
 import Navbar from "./navbar.layout";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 
-export default function MainLayout({ children }) {
+export default function MainLayout({ children }: { children: ReactNode }) {
 	const [theme, setTheme] = useState("dark");
 
 	// I know, I know... This is awful. Change
