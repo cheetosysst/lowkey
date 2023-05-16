@@ -45,7 +45,6 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 				state.status.filter((x) => x === letterState.CORRECT).length /
 				state.wordset.length;
 
-			console.log("ended", duration, accruacy);
 			return {
 				...state,
 				accuracy: accruacy,
@@ -73,17 +72,6 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 			const offset = Math.min(action.word.length, state.positionLetter);
 			const status = state.status;
 
-			// if (
-			// 	offset === state.positionLetter &&
-			// 	action.word.slice(-1) === " " &&
-			// 	state.wordset[action.word.length - 1] !==
-			// 		action.word[action.word.length - 1]
-			// ) {
-			// 	for (let i = offset + range-1; state.wordset[i]!== ' '; i++) {
-			// 		state.wordset
-			// 	}
-			// }
-
 			// Assign new state
 			for (let i = offset; i < offset + range; i++) {
 				status[i] =
@@ -93,7 +81,7 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 						? letterState.DEFAULT
 						: letterState.INCORRECT;
 			}
-			console.log(range, offset, status, action.word);
+
 			return {
 				...state,
 				status: status,
@@ -132,7 +120,6 @@ export default function TypeTest() {
 			target.value = "";
 			return;
 		}
-		console.log(target.value);
 		if (!testState.started)
 			testDispath({
 				type: "start",
@@ -145,12 +132,16 @@ export default function TypeTest() {
 			currentLetter === " " &&
 			currentLetter !== testState.wordset[target.value.length - 1]
 		) {
+			target.value = target.value.replace(/.$/, "");
 			for (
 				let i = target.value.length - 1;
-				testState.wordset[i] !== " ";
+				testState.wordset[i + 1] && testState.wordset[i + 1] !== " ";
 				i++
 			)
-				target.value += " ";
+				target.value = target.value.concat("", "-");
+
+			if (target.value.length !== testState.wordset.length)
+				target.value = target.value.concat(" ");
 		}
 
 		testDispath({
@@ -158,7 +149,7 @@ export default function TypeTest() {
 			word: target.value,
 		});
 
-		if (testState.positionLetter + 1 >= testState.wordset.length) {
+		if (target.value.length >= testState.wordset.length) {
 			testDispath({ type: "end" });
 			resetTest();
 			inputRef.current!.value = "";
