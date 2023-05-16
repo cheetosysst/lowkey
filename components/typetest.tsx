@@ -135,7 +135,7 @@ export default function TypeTest() {
 	return (
 		<>
 			<p
-				className="flex select-none flex-wrap justify-center gap-y-2 whitespace-pre break-words font-mono text-2xl font-medium tracking-wide transition-all duration-150"
+				className="select-none justify-center whitespace-pre-wrap break-words text-center font-mono text-2xl font-medium leading-10 tracking-wide transition-all duration-150"
 				onClick={focusInput}
 			>
 				{testState.wordset.length && testState.status.length ? (
