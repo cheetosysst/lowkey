@@ -18,7 +18,7 @@ const LETTER_STYLE = [
 type WordState = Array<letterState>;
 
 type TestAction =
-	| { type: "next" }
+	| { type: "end" }
 	| { type: "reset"; wordset: Array<string> }
 	| { type: "start"; time: Date }
 	| { type: "update"; word: string };
@@ -28,9 +28,8 @@ const initTestState = {
 	start: new Date(),
 	end: new Date(),
 	accuracy: 0.1,
-	wpm: 0,
-	status: Array<WordState>(0),
-	positionWord: 0,
+	wpm: 0 as number,
+	status: Array<letterState>(0) as WordState,
 	positionLetter: 0,
 	wordset: Array<string>(0) as WordSet,
 };
@@ -39,37 +38,29 @@ type TestStateType = typeof initTestState;
 
 function testReducer(state: TestStateType, action: TestAction): TestStateType {
 	switch (action.type) {
-		case "next":
-			if (state.positionWord + 1 >= state.wordset.length) {
-				const end = new Date();
-				const duration =
-					(end.getTime() - state.start.getTime()) / 60000;
-				const accruacy =
-					state.status.flat().filter((x) => x === letterState.CORRECT)
-						.length /
-					state.wordset.flatMap((x) => Array.from(x)).length;
+		case "end":
+			const end = new Date();
+			const duration = (end.getTime() - state.start.getTime()) / 60000;
+			const accruacy =
+				state.status.filter((x) => x === letterState.CORRECT).length /
+				state.wordset.length;
 
-				console.log("ended", duration, accruacy);
-				return {
-					...state,
-					accuracy: accruacy,
-					wpm: state.wordset.length / duration,
-				};
-			}
+			console.log("ended", duration, accruacy);
 			return {
 				...state,
-				positionWord: state.positionWord + 1,
+				accuracy: accruacy,
+				wpm: state.wordset.join("").split(" ").length / duration,
 			};
 		case "reset":
+			const wordset = Array.from(action.wordset.join(" "));
 			return {
 				...state,
-				wordset: action.wordset,
-				status: action.wordset.map((word) =>
-					Array<letterState>(word.length).fill(letterState.DEFAULT)
+				wordset: wordset,
+				status: Array<letterState>(wordset.length).fill(
+					letterState.DEFAULT
 				),
 				started: false,
 				positionLetter: 0,
-				positionWord: 0,
 			};
 		case "start":
 			return {
@@ -78,36 +69,22 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 				started: true,
 			};
 		case "update":
-			const targetWord = state.wordset[state.positionWord];
-			const currentWord = action.word;
-			const currentWordLength = action.word.length;
-			const wordState: WordState = Array<letterState>(targetWord.length)
-				.fill(letterState.DEFAULT)
-				.map((value, index) => {
-					if (index >= currentWordLength) return letterState.DEFAULT;
-					if (currentWord[index] === targetWord[index])
-						return letterState.CORRECT;
-					return letterState.INCORRECT;
-				});
-
-			// TODO this is bad
+			const range = Math.abs(action.word.length - state.positionLetter);
+			const offset = Math.min(action.word.length, state.positionLetter);
 			const status = state.status;
-			if (
-				currentWord.length >= targetWord.length &&
-				status[state.positionWord + 1]
-			) {
-				status[state.positionWord + 1][0] = letterState.CURRENT;
-			} else if (status[state.positionWord + 1]) {
-				status[state.positionWord + 1][0] = letterState.DEFAULT;
-				wordState[currentWord.length] = letterState.CURRENT;
-			} else {
-				wordState[currentWord.length] = letterState.CURRENT;
+			for (let i = offset; i < offset + range; i++) {
+				status[i] =
+					state.wordset[i] === action.word[i]
+						? letterState.CORRECT
+						: i < state.positionLetter
+						? letterState.DEFAULT
+						: letterState.INCORRECT;
 			}
-			status[state.positionWord] = wordState;
+			console.log(range, offset, status, action.word);
 			return {
 				...state,
-				positionLetter: 0,
 				status: status,
+				positionLetter: action.word.length,
 			};
 		default:
 			throw new Error();
@@ -145,33 +122,33 @@ export default function TypeTest() {
 
 		testDispath({
 			type: "update",
-			word: target.value.trim(),
+			word: target.value,
 		});
 
-		if (target.value.slice(-1) === " ") {
-			testDispath({ type: "next" });
-			target.value = "";
-
-			if (testState.positionWord + 1 >= testState.wordset.length) {
-				resetTest();
-			}
+		if (testState.positionLetter + 1 >= testState.wordset.length) {
+			testDispath({ type: "end" });
+			resetTest();
+			inputRef.current!.value = "";
 		}
 	};
 
 	return (
 		<>
 			<p
-				className="flex select-none flex-wrap justify-center gap-y-2 break-words font-mono text-2xl font-medium tracking-wide transition-all duration-150"
+				className="flex select-none flex-wrap justify-center gap-y-2 whitespace-pre break-words font-mono text-2xl font-medium tracking-wide transition-all duration-150"
 				onClick={focusInput}
 			>
 				{testState.wordset.length && testState.status.length ? (
-					testState.wordset.map((word, index) => {
+					testState.wordset.map((letter, index) => {
 						return (
-							<Word
-								word={word}
-								key={`${word}-${index}`}
-								states={testState.status[index]}
-								className="mr-3"
+							<Letter
+								letter={letter}
+								key={`${letter}-${index}`}
+								state={
+									testState.positionLetter === index
+										? letterState.CURRENT
+										: testState.status[index]
+								}
 							/>
 						);
 					})
@@ -196,31 +173,6 @@ export default function TypeTest() {
 	);
 }
 
-function Word({
-	word,
-	states,
-	key,
-	className,
-}: {
-	word: string;
-	states?: Array<letterState>;
-	key: string;
-	className?: string;
-}) {
-	if (!states) return <></>;
-	return (
-		<span className={className}>
-			{word.split("").map((letter, index) => (
-				<Letter
-					letter={letter}
-					state={states[index]}
-					key={`${key}-${letter}`}
-				/>
-			))}
-		</span>
-	);
-}
-
 function Letter({
 	letter,
 	state,
@@ -231,7 +183,7 @@ function Letter({
 	key: string;
 }) {
 	return (
-		<span key={key} className={` transition-all ${LETTER_STYLE[state]}`}>
+		<span key={key} className={`transition-all ${LETTER_STYLE[state]}`}>
 			{letter}
 		</span>
 	);
