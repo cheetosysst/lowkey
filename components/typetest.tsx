@@ -72,6 +72,19 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 			const range = Math.abs(action.word.length - state.positionLetter);
 			const offset = Math.min(action.word.length, state.positionLetter);
 			const status = state.status;
+
+			// if (
+			// 	offset === state.positionLetter &&
+			// 	action.word.slice(-1) === " " &&
+			// 	state.wordset[action.word.length - 1] !==
+			// 		action.word[action.word.length - 1]
+			// ) {
+			// 	for (let i = offset + range-1; state.wordset[i]!== ' '; i++) {
+			// 		state.wordset
+			// 	}
+			// }
+
+			// Assign new state
 			for (let i = offset; i < offset + range; i++) {
 				status[i] =
 					state.wordset[i] === action.word[i]
@@ -114,11 +127,31 @@ export default function TypeTest() {
 
 	const changeHandler = (e: ChangeEvent) => {
 		const target = e.target as HTMLInputElement;
+
+		if (!testState.started && target.value === " ") {
+			target.value = "";
+			return;
+		}
+		console.log(target.value);
 		if (!testState.started)
 			testDispath({
 				type: "start",
 				time: new Date(),
 			});
+
+		// Skip check
+		const currentLetter = target.value.slice(-1);
+		if (
+			currentLetter === " " &&
+			currentLetter !== testState.wordset[target.value.length - 1]
+		) {
+			for (
+				let i = target.value.length - 1;
+				testState.wordset[i] !== " ";
+				i++
+			)
+				target.value += " ";
+		}
 
 		testDispath({
 			type: "update",
@@ -157,7 +190,7 @@ export default function TypeTest() {
 				)}
 			</p>
 
-			<div className="mt-10 flex justify-center gap-4">
+			<div className="mt-10 flex justify-center gap-4 text-gray-200">
 				<span>{(testState.accuracy * 100).toFixed(1)}</span>
 				<span>{testState.wpm.toFixed(1)}</span>
 			</div>
