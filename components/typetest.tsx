@@ -1,4 +1,4 @@
-import { ChangeEvent, createRef, useEffect, useReducer } from "react";
+import { ChangeEvent, createRef, useEffect, useReducer, useState } from "react";
 import { WordSet, getRandomSet, getWordSet } from "../libs/word";
 
 export enum letterState {
@@ -159,7 +159,7 @@ export default function TypeTest() {
 	return (
 		<>
 			<p
-				className="select-none justify-center whitespace-pre-wrap break-words text-center font-mono text-2xl font-medium leading-10 tracking-wide transition-all duration-150"
+				className="select-none justify-center whitespace-pre-wrap break-words text-center font-mono text-2xl font-medium leading-10 tracking-wide blur-sm transition-all duration-150 focus-within:blur-none"
 				onClick={focusInput}
 			>
 				{testState.wordset.length && testState.status.length ? (
@@ -179,19 +179,24 @@ export default function TypeTest() {
 				) : (
 					<span></span>
 				)}
+				<input
+					onChange={changeHandler}
+					className="cursor-default opacity-0"
+					ref={inputRef}
+				/>
 			</p>
 
 			<div className="mt-10 flex justify-center gap-4 text-gray-200">
 				<span>{(testState.accuracy * 100).toFixed(1)}</span>
 				<span>{testState.wpm.toFixed(1)}</span>
 			</div>
-			<div className="mt-10 flex justify-center">
-				<input
-					onChange={changeHandler}
-					className="cursor-default opacity-0"
-					ref={inputRef}
-				/>
-				<button onClick={resetTest}></button>
+			<div className="flex justify-center">
+				<button
+					onClick={resetTest}
+					className="rounded-md bg-white/5 p-2 font-mono opacity-0 outline-none transition-all focus:opacity-100"
+				>
+					reset
+				</button>
 			</div>
 		</>
 	);
