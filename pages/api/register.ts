@@ -2,11 +2,19 @@ import { NextApiRequest, NextApiResponse } from "next";
 import conn from "../../libs/database";
 // @ts-expect-error
 import bcrypt from "bcrypt";
+import { Auth, getAuth } from "../../libs/auth";
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
+	const auth: Auth | undefined = getAuth(req);
+
+	if (auth === undefined) {
+		res.status(200).json({ message: "No token found" });
+		return;
+	}
+
 	const {
 		username,
 		password,

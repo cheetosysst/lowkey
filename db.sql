@@ -33,7 +33,8 @@ CREATE TABLE TypeTest (
 	id BINARY(16) PRIMARY KEY,
 	user_id VARCHAR(64),
 	wpm SMALLINT NOT NULL,
-	test_timestamp TIMESTAMP,
+	test_start TIMESTAMP NOT NULL,
+	test_end TIMESTAMP NOT NULL,
 	type ENUM(
 		"15s",
 		"30s",
@@ -45,6 +46,7 @@ CREATE TABLE TypeTest (
 		"100w"
 	) NOT NULL,
 	accuracy DECIMAL(5, 2),
+	validate BOOLEAN,
 	KEY account_id_idx (user_id)
 );
 

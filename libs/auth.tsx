@@ -4,6 +4,12 @@ import jwt from "jsonwebtoken";
 import { getBaseUrl } from "./url";
 import { NextApiRequest } from "next";
 
+export type Auth = {
+	username: string;
+	email: string;
+	role: string;
+};
+
 const initLoginState = {
 	isAuth: false,
 	isAdmin: false,

@@ -1,12 +1,13 @@
-import { ChangeEvent, createRef, useEffect, useReducer, useState } from "react";
-import { WordSet, getRandomSet, getWordSet } from "../libs/word";
-
-export enum letterState {
-	DEFAULT = 0,
-	INCORRECT = 1,
-	CORRECT = 2,
-	CURRENT = 3,
-}
+import { ChangeEvent, createRef, useEffect, useReducer } from "react";
+import { getRandomSet, getWordSet } from "../libs/word";
+import {
+	letterState,
+	TestStateType,
+	initTestState,
+	validate,
+	validateState,
+	submit,
+} from "../libs/test";
 
 const LETTER_STYLE = [
 	`text-gray-500`,
@@ -15,26 +16,11 @@ const LETTER_STYLE = [
 	`bg-gray-400 text-gray-800`,
 ];
 
-type WordState = Array<letterState>;
-
 type TestAction =
 	| { type: "end" }
 	| { type: "reset"; wordset: Array<string> }
 	| { type: "start"; time: Date }
 	| { type: "update"; word: string };
-
-const initTestState = {
-	started: false,
-	start: new Date(),
-	end: new Date(),
-	accuracy: 0.1,
-	wpm: 0 as number,
-	status: Array<letterState>(0) as WordState,
-	positionLetter: 0,
-	wordset: Array<string>(0) as WordSet,
-};
-
-type TestStateType = typeof initTestState;
 
 function testReducer(state: TestStateType, action: TestAction): TestStateType {
 	switch (action.type) {
@@ -151,6 +137,12 @@ export default function TypeTest() {
 
 		if (target.value.length >= testState.wordset.length) {
 			testDispath({ type: "end" });
+			const validateResult = validate(testState);
+			// TODO Display validate results
+
+			if (validateResult.result === validateState.PASSED) {
+				submit(testState).then(() => {});
+			}
 			resetTest();
 			inputRef.current!.value = "";
 		}
