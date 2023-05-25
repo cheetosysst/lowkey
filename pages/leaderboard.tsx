@@ -71,7 +71,7 @@ function Board({ data }: { data: BoardData | undefined }) {
 
 	return (
 		<>
-			<table className="w-96 table-auto">
+			<table className="w-96 table-auto overflow-hidden rounded-md">
 				<tbody>
 					<tr className="bg-slate-800">
 						<th className="font-mono font-normal">rank</th>
@@ -107,7 +107,9 @@ function TableEntry({ data, rank }: { data: BoardEntry; rank: number }) {
 				</Link>
 			</td>
 			<td className="font-mono font-normal">{data.wpm}</td>
-			<td className="font-mono font-normal">{data.accuracy}</td>
+			<td className="font-mono font-normal">
+				{Number(data.accuracy) * 100}%
+			</td>
 		</tr>
 	);
 }
