@@ -23,7 +23,8 @@ export default function Page() {
 	useEffect(() => {
 		fetch(`${getBaseUrl()}/api/test/leaderboard`)
 			.then((data) => data.json())
-			.then((data) => setLeaderboard(data));
+			.then((data) => setLeaderboard(data))
+			.catch((e) => console.error(e));
 	}, []);
 
 	return (
