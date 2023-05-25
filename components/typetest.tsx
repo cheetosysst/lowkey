@@ -17,13 +17,22 @@ const LETTER_STYLE = [
 ];
 
 type TestAction =
-	| { type: "end" }
+	| { type: "end"; time: Date }
 	| { type: "reset"; wordset: Array<string> }
 	| { type: "start"; time: Date }
-	| { type: "update"; word: string };
+	| { type: "update"; word: string }
+	| { type: "submit" };
 
 function testReducer(state: TestStateType, action: TestAction): TestStateType {
 	switch (action.type) {
+		case "submit":
+			const validateResult = validate(state);
+			console.log(state, state.accuracy, validateResult);
+			if (validateResult.result === validateState.PASSED) {
+				submit(state);
+			}
+
+			return { ...state };
 		case "end":
 			const end = new Date();
 			const duration = (end.getTime() - state.start.getTime()) / 60000;
@@ -35,6 +44,7 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 				...state,
 				accuracy: accruacy,
 				wpm: state.wordset.join("").split(" ").length / duration,
+				end: end,
 			};
 		case "reset":
 			const wordset = Array.from(action.wordset.join(" "));
@@ -106,11 +116,13 @@ export default function TypeTest() {
 			target.value = "";
 			return;
 		}
-		if (!testState.started)
+		if (!testState.started) {
+			const startTime = new Date();
 			testDispath({
 				type: "start",
-				time: new Date(),
+				time: startTime,
 			});
+		}
 
 		// Skip check
 		const currentLetter = target.value.slice(-1);
@@ -136,13 +148,14 @@ export default function TypeTest() {
 		});
 
 		if (target.value.length >= testState.wordset.length) {
-			testDispath({ type: "end" });
-			const validateResult = validate(testState);
-			// TODO Display validate results
-
-			if (validateResult.result === validateState.PASSED) {
-				submit(testState).then(() => {});
-			}
+			const endTime = new Date();
+			testDispath({
+				type: "end",
+				time: endTime,
+			});
+			testDispath({
+				type: "submit",
+			});
 			resetTest();
 			inputRef.current!.value = "";
 		}

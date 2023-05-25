@@ -34,7 +34,7 @@ export function validate(
 	typetest: Omit<TestStateType, "started" | "positionLetter">
 ) {
 	if (typetest.accuracy < 0.3) return { result: validateState.ACCURACY };
-	if (typetest.start.getTime() - typetest.end.getTime() < 1000)
+	if (typetest.end.getTime() - typetest.start.getTime() < 1000)
 		return { result: validateState.TIME };
 	if (typetest.wpm > 300) return { result: validateState.WPM };
 	return { result: validateState.PASSED };
