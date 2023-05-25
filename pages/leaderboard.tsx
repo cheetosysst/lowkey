@@ -80,7 +80,6 @@ function Board({ data }: { data: BoardData | undefined }) {
 						<th className="font-mono font-normal">acc</th>
 					</tr>
 					{table.map((item, index) => {
-						// console.log(item);
 						return (
 							<TableEntry
 								data={item}

@@ -14,7 +14,7 @@ export const initTestState = {
 	started: false,
 	start: new Date(),
 	end: new Date(),
-	accuracy: 0.1,
+	accuracy: NaN,
 	wpm: 0 as number,
 	status: Array<letterState>(0) as WordState,
 	positionLetter: 0,

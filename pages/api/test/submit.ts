@@ -27,10 +27,10 @@ export default async function handler(
 		start: startTime,
 	} as TestStateType;
 
-	const validateResult = validate(testState);
+	const isValidated = validate(testState).result === validateState.PASSED;
 	const uuid = await generateUUID();
 
-	const query = `
+	const queryTypeTest = `
 	INSERT INTO TypeTest (
 		id, 
 		user_id,
@@ -46,22 +46,24 @@ export default async function handler(
 		${testState.wpm},
 		'25w',
 		${testState.accuracy.toFixed(2)},
-		${validateResult.result === validateState.PASSED},
+		${isValidated},
 		'${testState.end.toISOString().slice(0, 23).replace("T", " ")}',
 		'${testState.start.toISOString().slice(0, 23).replace("T", " ")}'
 	);`;
 
-	conn.execute(query)
-		.then((data) => {
-			res.status(200).json({ message: "Result saved." });
-		})
-		.catch((e) => {
-			console.error(e);
-			res.status(500).json({
-				message:
-					"Failed saving test result to database. Contact support.",
-			});
-		});
+	const queryExp = `UPDATE Account SET exp=exp+${
+		isValidated ? 10 : 0
+	} WHERE id='${auth.username}';`;
+
+	conn.transaction(async (tx) => {
+		await tx.execute(queryTypeTest);
+		if (auth !== undefined) await tx.execute(queryExp);
+	}).catch((e) => {
+		console.error(e);
+		res.status(500).json({ message: "failed submitting test result" });
+	});
+
+	res.status(200).json({ message: "done." });
 }
 
 const generateUUID = async (): Promise<string> => {

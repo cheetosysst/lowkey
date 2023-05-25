@@ -1,6 +1,7 @@
 import MainLayout from "../../components/main.layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import conn from "../../libs/database";
+import { getLevel } from "../../libs/level";
 
 type UserRecord = {
 	id: string;
@@ -31,8 +32,13 @@ export default function Page({
 							<div className="my-auto flex flex-col text-4xl ">
 								<span className="">{user?.name}</span>
 								<br />
-								<span className="text-base leading-6 text-white/50">
-									@ {user?.id}
+								<span className=" leading-3">
+									<span className="text-base leading-6 text-white/50">
+										@{user?.id}
+									</span>
+									<span className="ml-2 rounded-md bg-white/10 px-2 text-sm">
+										lv.{getLevel(user!.exp)}
+									</span>
 								</span>
 							</div>
 						</div>

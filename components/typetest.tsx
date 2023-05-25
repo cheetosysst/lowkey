@@ -27,10 +27,9 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 	switch (action.type) {
 		case "submit":
 			const validateResult = validate(state);
-			console.log(state, state.accuracy, validateResult);
-			if (validateResult.result === validateState.PASSED) {
-				submit(state);
-			}
+			const passed = validateResult.result === validateState.PASSED;
+
+			if (passed) submit(state).catch((e) => console.error(e));
 
 			return { ...state };
 		case "end":
@@ -97,6 +96,7 @@ export default function TypeTest() {
 			.then((data) => getRandomSet(data.wordset, 30))
 			.then((data) => testDispath({ type: "reset", wordset: data }))
 			.then(() => (inputRef.current!.value = ""))
+			.then(() => (inputRef.current!.value = ""))
 			.catch((e) => console.error(e));
 
 	const focusInput = () => inputRef.current?.focus();
@@ -157,7 +157,6 @@ export default function TypeTest() {
 				type: "submit",
 			});
 			resetTest();
-			inputRef.current!.value = "";
 		}
 	};
 
