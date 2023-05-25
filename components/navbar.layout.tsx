@@ -7,7 +7,7 @@ import { getBaseUrl } from "../libs/url";
 export default function Navbar({}) {
 	return (
 		<>
-			<div className="container my-4 mx-auto flex w-10/12 justify-around gap-2 xl:w-1/2">
+			<div className="container mx-auto my-4 flex w-10/12 justify-around gap-2 xl:w-1/2">
 				<ul className="text-3xl">
 					<li>
 						<ButtonTransparent href="/" className="text-3xl">
@@ -20,7 +20,7 @@ export default function Navbar({}) {
 						<ButtonTransparent href="/">Test</ButtonTransparent>
 					</li>
 					<li>
-						<ButtonTransparent href="/placeholder">
+						<ButtonTransparent href="/leaderboard">
 							Leaderboard
 						</ButtonTransparent>
 					</li>
