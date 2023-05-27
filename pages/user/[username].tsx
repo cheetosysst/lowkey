@@ -3,6 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import conn from "../../libs/database";
 import { getLevel } from "../../libs/level";
 import { getMonthStart } from "../../libs/misc";
+import { CommonHead } from "../../components/meta";
 
 type UserRecord = {
 	id: string;
@@ -24,6 +25,10 @@ export default function Page(
 
 	return (
 		<MainLayout>
+			<CommonHead
+				title={props.user!.name}
+				route={`/user/${props.user!.name}`}
+			/>
 			<div className="container mx-auto mt-12 sm:px-10 lg:px-60">
 				<div className="grid grid-cols-2 gap-4 rounded-lg border-[1px] border-white/20 p-6 transition-colors duration-200 hover:border-white/40 xl:grid-cols-4">
 					<div className="col-span-2 flex gap-8 rounded-md bg-white/10 p-4  transition-all hover:bg-gray-300/20 hover:drop-shadow-md">

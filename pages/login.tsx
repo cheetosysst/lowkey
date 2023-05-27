@@ -4,6 +4,7 @@ import { FormEvent, FormEventHandler, useContext } from "react";
 import { AuthContext } from "../libs/auth";
 import { getBaseUrl } from "../libs/url";
 import { ButtonTransparent } from "../components/button.components";
+import { CommonHead } from "../components/meta";
 
 interface loginEventHandler extends HTMLFormElement {
 	username: HTMLInputElement;
@@ -49,6 +50,7 @@ export default function Home() {
 
 	return (
 		<>
+			<CommonHead title="Login" route="/login" />
 			<MainLayout>
 				<div className="container mx-auto flex justify-center">
 					<form onSubmit={loginHandler}>

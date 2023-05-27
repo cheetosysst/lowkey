@@ -11,6 +11,8 @@ import {
 	FormSubmitButton,
 	FormUnicode,
 } from "../components/form";
+import Head from "next/head";
+import { CommonHead } from "../components/meta";
 
 interface registerEventHandler extends HTMLFormElement {
 	username: HTMLInputElement;
@@ -55,6 +57,9 @@ export default function Home(): ReactElement {
 
 	return (
 		<MainLayout>
+			<Head>
+				<CommonHead title="Register" route="/register" />
+			</Head>
 			<div className="container mx-auto flex justify-center">
 				<form onSubmit={loginHandler}>
 					<FormEnglish id="username" text="Username" />

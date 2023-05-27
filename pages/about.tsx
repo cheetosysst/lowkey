@@ -1,19 +1,13 @@
 import Head from "next/head";
 import MainLayout from "../components/main.layout";
 import { ArticleLink } from "../components/button.components";
-import MetaTags from "../components/meta";
+import { CommonHead } from "../components/meta";
 
 export default function About() {
 	return (
 		<>
 			<Head>
-				<title>Lowkey</title>
-				<MetaTags
-					name="About - Lowkey"
-					image="https://lowkey.thect.cc/Lowkey.png"
-					url="https://lowkey.thect.cc/about"
-					description="Yet another minimalistic typing test because why not lol"
-				/>
+				<CommonHead title="About" route="/about" />
 			</Head>
 			<MainLayout>
 				<div className="text-primary-content container mx-auto mt-32 text-center text-2xl tracking-widest md:w-2/3 xl:w-3/5">
@@ -42,7 +36,7 @@ export default function About() {
 							</p>
 						</section>
 						<section>
-							<h2 className="mt-12 mb-4 text-2xl text-gray-100">
+							<h2 className="mb-4 mt-12 text-2xl text-gray-100">
 								Warning
 							</h2>
 							<p className="mb-6">
@@ -57,7 +51,7 @@ export default function About() {
 							</p>
 						</section>
 						<section>
-							<h2 className="mt-12 mb-4 text-2xl text-gray-100">
+							<h2 className="mb-4 mt-12 text-2xl text-gray-100">
 								Contact
 							</h2>
 							<p className="mb-6">

@@ -1,10 +1,9 @@
 import Head from "next/head";
 import MainLayout from "../components/main.layout";
-import MetaTags from "../components/meta";
-import { ArticleLink } from "../components/button.components";
 import { useEffect, useState } from "react";
 import { getBaseUrl } from "../libs/url";
 import Link from "next/link";
+import { CommonHead } from "../components/meta";
 
 type BoardEntry = {
 	user_id: string;
@@ -29,16 +28,11 @@ export default function Page() {
 
 	return (
 		<>
-			<Head>
-				<title>Lowkey</title>
-				<MetaTags
-					name="Placeholder - Lowkey"
-					image="https://lowkey.thect.cc/Lowkey.png"
-					url="https://lowkey.thect.cc/placeholder"
-					description="Placeholder page for all the feature that's planned but not yet implemented (and likely never will LOL)."
-				/>
-			</Head>
 			<MainLayout>
+				<Head>
+					<title>Lowkey</title>
+					<CommonHead title="Home" route="/" />
+				</Head>
 				<div className="text-primary-content container mx-auto mt-32 text-center text-2xl tracking-widest md:w-2/3 xl:w-3/5">
 					<article className="text-xl text-gray-400">
 						<section>
