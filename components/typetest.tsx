@@ -7,6 +7,7 @@ import {
 	validate,
 	validateState,
 	submit,
+	TestEndPoint,
 } from "../libs/test";
 
 const LETTER_STYLE = [
@@ -18,7 +19,7 @@ const LETTER_STYLE = [
 
 type TestAction =
 	| { type: "end"; time: Date }
-	| { type: "reset"; wordset: Array<string> }
+	| { type: "reset"; wordset: Array<string>; endpoint: TestEndPoint }
 	| { type: "start"; time: Date }
 	| { type: "update"; word: string }
 	| { type: "submit" };
@@ -29,7 +30,8 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 			const validateResult = validate(state);
 			const passed = validateResult.result === validateState.PASSED;
 
-			if (passed) submit(state).catch((e) => console.error(e));
+			if (passed)
+				submit(state, state.endpoint).catch((e) => console.error(e));
 
 			return { ...state };
 		case "end":
@@ -55,6 +57,7 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 				),
 				started: false,
 				positionLetter: 0,
+				endpoint: action.endpoint,
 			};
 		case "start":
 			return {
@@ -87,15 +90,20 @@ function testReducer(state: TestStateType, action: TestAction): TestStateType {
 	}
 }
 
-export default function TypeTest() {
+export default function TypeTest({ endpoint }: { endpoint: TestEndPoint }) {
 	const [testState, testDispath] = useReducer(testReducer, initTestState);
 	const inputRef = createRef<HTMLInputElement>();
 
 	const resetTest = () =>
 		getWordSet("english")
 			.then((data) => getRandomSet(data.wordset, 30))
-			.then((data) => testDispath({ type: "reset", wordset: data }))
-			.then(() => (inputRef.current!.value = ""))
+			.then((data) =>
+				testDispath({
+					type: "reset",
+					wordset: data,
+					endpoint: endpoint,
+				})
+			)
 			.then(() => (inputRef.current!.value = ""))
 			.catch((e) => console.error(e));
 

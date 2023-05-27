@@ -8,6 +8,11 @@ export enum letterState {
 	CURRENT = 3,
 }
 
+export enum TestEndPoint {
+	SINGLE = "submit",
+	DUEL = "duel",
+}
+
 export type WordState = Array<letterState>;
 
 export const initTestState = {
@@ -19,6 +24,7 @@ export const initTestState = {
 	status: Array<letterState>(0) as WordState,
 	positionLetter: 0,
 	wordset: Array<string>(0) as WordSet,
+	endpoint: TestEndPoint.SINGLE,
 };
 
 export type TestStateType = typeof initTestState;
@@ -41,9 +47,10 @@ export function validate(
 }
 
 export function submit(
-	state: Omit<TestStateType, "started" | "positionLetter">
+	state: Omit<TestStateType, "started" | "positionLetter">,
+	endpoint: TestEndPoint = TestEndPoint.SINGLE
 ) {
-	return fetch(`${getBaseUrl()}/api/test/submit`, {
+	return fetch(`${getBaseUrl()}/api/test/${endpoint}`, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(state),

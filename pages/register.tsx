@@ -28,7 +28,7 @@ export default function Home(): ReactElement {
 
 		const target = e.target as registerEventHandler;
 
-		if (target.checkValidity()) {
+		if (!target.checkValidity()) {
 			setFormError(true);
 			setFormErrorMessage("Invalid input, please check again");
 			return;

@@ -58,7 +58,7 @@ export default async function handler(
 
 	conn.transaction(async (tx) => {
 		await tx.execute(queryTypeTest);
-		if (auth !== undefined) await tx.execute(queryExp);
+		await tx.execute(queryExp);
 	}).catch((e) => {
 		console.error(e);
 		res.status(500).json({ message: "failed submitting test result" });

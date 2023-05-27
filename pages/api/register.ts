@@ -10,11 +10,6 @@ export default async function handler(
 ) {
 	const auth: Auth | undefined = getAuth(req);
 
-	if (auth === undefined) {
-		res.status(200).json({ message: "No token found" });
-		return;
-	}
-
 	const {
 		username,
 		password,
@@ -41,7 +36,7 @@ export default async function handler(
 			return undefined;
 		});
 
-	if (used) {
+	if (used?.rows.length) {
 		res.status(409).json({
 			message: "Username used",
 			full_message: "Username taken",

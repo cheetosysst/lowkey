@@ -9,26 +9,6 @@ CREATE TABLE Account (
 	create_date TIMESTAMP
 );
 
-INSERT
-	Account (id, email, name, passwd, type, create_date)
-VALUES
-	(
-		"bar",
-		"bar@example.com",
-		"abcde",
-		"$2b$10$t7oxiwchWGHa/B9w0AzrYO2WH2rQbA86YSuQjSTmwIrpC/0ZXN7V2",
-		"default",
-		CURRENT_TIMESTAMP
-	);
-
-SELECT
-	passwd
-FROM
-	Account
-WHERE
-	email = "das@example.com"
-	OR id = 'das@example.com';
-
 CREATE TABLE TypeTest (
 	id BINARY(16) PRIMARY KEY,
 	user_id VARCHAR(64),
@@ -52,12 +32,14 @@ CREATE TABLE TypeTest (
 
 CREATE TABLE Duel (
 	id BINARY(16) PRIMARY KEY,
-	p1_test_id BINARY(16) NOT NULL,
-	p2_test_id BINARY(16) NOT NULL,
-	winner VARCHAR(64),
-	duel_time TIMESTAMP,
-	KEY player1_testid_index (p1_test_id),
-	KEY player2_testid_index (p2_test_id)
+	player1 VARCHAR(64) NOT NULL,
+	player2 VARCHAR(64) DEFAULT NULL,
+	p1_test BINARY(16) NOT NULL,
+	p2_test BINARY(16) DEFAULT NULL,
+	winner ENUM('player1', 'player2', 'tie'),
+	duel_time TIMESTAMP NOT NULL,
+	KEY player1_testid_index (p1_test),
+	KEY player2_testid_index (p2_test)
 );
 
 CREATE TABLE AccountConfig (

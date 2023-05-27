@@ -20,6 +20,9 @@ export default function Navbar({}) {
 						<ButtonTransparent href="/">Test</ButtonTransparent>
 					</li>
 					<li>
+						<ButtonTransparent href="/duel">Duel</ButtonTransparent>
+					</li>
+					<li>
 						<ButtonTransparent href="/leaderboard">
 							Leaderboard
 						</ButtonTransparent>
