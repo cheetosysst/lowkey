@@ -5,6 +5,7 @@ import conn from "../../../libs/database";
 // @ts-ignore
 import { v4 as uuidv4 } from "uuid";
 import { validateState } from "../../../libs/test";
+import { sqlTimestamp } from "../../../libs/misc";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -47,8 +48,8 @@ export default async function handler(
 		'25w',
 		${testState.accuracy.toFixed(2)},
 		${isValidated},
-		'${testState.end.toISOString().slice(0, 23).replace("T", " ")}',
-		'${testState.start.toISOString().slice(0, 23).replace("T", " ")}'
+		'${sqlTimestamp(testState.end)}',
+		'${sqlTimestamp(testState.start)}'
 	);`;
 
 	const queryExp = `UPDATE Account SET exp=exp+${

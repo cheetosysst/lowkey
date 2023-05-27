@@ -2,6 +2,7 @@ import MainLayout from "../../components/main.layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import conn from "../../libs/database";
 import { getLevel } from "../../libs/level";
+import { getMonthStart } from "../../libs/misc";
 
 type UserRecord = {
 	id: string;
@@ -11,11 +12,10 @@ type UserRecord = {
 	create_date: string;
 };
 
-export default function Page({
-	user,
-	notFound,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	if (notFound)
+export default function Page(
+	props: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
+	if (props.notFound)
 		return (
 			<MainLayout>
 				<div className="container mx-auto">Not Found</div>
@@ -26,40 +26,52 @@ export default function Page({
 		<MainLayout>
 			<div className="container mx-auto mt-12 sm:px-10 lg:px-60">
 				<div className="grid grid-cols-2 gap-4 rounded-lg border-[1px] border-white/20 p-6 transition-colors duration-200 hover:border-white/40 xl:grid-cols-4">
-					<div className="col-span-2 flex gap-8 rounded-md bg-white/10 p-4 ">
+					<div className="col-span-2 flex gap-8 rounded-md bg-white/10 p-4  transition-all hover:bg-gray-300/20 hover:drop-shadow-md">
 						<div className="my-auto h-20 w-20 rounded-full bg-white/50"></div>
 						<div className="flex">
 							<div className="my-auto flex flex-col text-4xl ">
-								<span className="">{user?.name}</span>
+								<span className="">{props.user?.name}</span>
 								<br />
 								<span className=" leading-3">
 									<span className="text-base leading-6 text-white/50">
-										@{user?.id}
+										@{props.user?.id}
 									</span>
 									<span className="ml-2 rounded-md bg-white/10 px-2 text-sm">
-										lv.{getLevel(user!.exp)}
+										lv.{getLevel(props.user!.exp)}
 									</span>
 								</span>
 							</div>
 						</div>
 					</div>
-					<div className="flex flex-col rounded-md bg-white/10 p-4 ">
-						<BioData text="test count" value={100} />
-						<BioData text="dual count" value={100} mt />
+					<div className="flex flex-col rounded-md bg-white/10 p-4 transition-all hover:bg-gray-300/20 hover:drop-shadow-md">
+						<BioData text="test count" value={props.testCount} />
+						<BioData text="dual count" value={-1} />
 					</div>
-					<div className="flex flex-col rounded-md bg-white/10 p-4">
-						<BioData text="joined date" value={100} />
-						<BioData text="dual count" value={100} mt />
+					<div className="flex flex-col rounded-md bg-white/10 p-4 transition-all hover:bg-gray-300/20 hover:drop-shadow-md">
+						<BioData
+							text="joined date"
+							value={Intl.DateTimeFormat("zh-tw").format(
+								Date.parse(props.user!.create_date)
+							)}
+						/>
+						<BioData
+							text="experience"
+							value={`${props.user!.exp} pt`}
+						/>
 					</div>
 				</div>
 				<div className="mt-8 flex justify-evenly rounded-lg border-[1px] border-white/20 p-6 transition-colors duration-200 hover:border-white/40">
 					<div>
 						<span className="text-white/50">all time:</span>
-						<span className="ml-5 text-xl font-medium">100 th</span>
+						<span className="ml-5 text-xl font-medium">
+							{getRankText(props.rankAllTime)}
+						</span>
 					</div>
 					<div>
 						<span className="text-white/50">this month:</span>
-						<span className="ml-5 text-xl font-medium">100 th</span>
+						<span className="ml-5 text-xl font-medium">
+							{getRankText(props.rankMonthly)}
+						</span>
 					</div>
 				</div>
 				<div className="mt-8 grid grid-cols-4 gap-4 rounded-lg border-[1px] border-white/20 p-6 transition-colors duration-200 hover:border-white/40">
@@ -96,22 +108,74 @@ function BioData({
 export const getServerSideProps: GetServerSideProps<{
 	user?: UserRecord;
 	notFound: boolean;
+	testCount: number;
+	rankMonthly: number;
+	rankAllTime: number;
 }> = async ({ params }) => {
 	const username: string | string[] | undefined = params?.username;
 
 	if (typeof username !== "string") return { notFound: true };
 
-	const result = await conn.execute(
-		`SELECT id, name, create_date, lvl, exp FROM Account WHERE id="${username}"`
-	);
-	if (result.rows.length !== 1) return { props: { notFound: true } };
+	const _result = await conn.transaction(async (tx) => {
+		const user = await tx.execute(
+			`SELECT id, name, create_date, lvl, exp FROM Account WHERE id="${username}"`
+		);
+		const test = await tx.execute(
+			`SELECT COUNT(*) FROM TypeTest WHERE user_id="${username}";`
+		);
 
-	const user = result.rows[0] as UserRecord;
+		const monthStart = getMonthStart();
+
+		const rankMonthly = await tx.execute(`
+		SELECT MIN(row_num) as best_rank
+		FROM (
+			SELECT *, ROW_NUMBER() OVER (ORDER BY wpm DESC) AS row_num
+			FROM (
+				SELECT wpm, user_id
+				FROM TypeTest
+				WHERE test_start
+					BETWEEN '${monthStart}' AND DATE_ADD('${monthStart}', INTERVAL 1 MONTH)
+				ORDER BY wpm ASC
+			) AS ranks
+		) AS subquery
+		WHERE user_id = '${username}';
+		`);
+
+		const rankAllTime = await tx.execute(`
+		SELECT MIN(row_num) as best_rank
+		FROM (
+			SELECT *, ROW_NUMBER() OVER (ORDER BY wpm DESC) AS row_num
+			FROM (
+				SELECT wpm, user_id
+				FROM TypeTest
+				ORDER BY wpm ASC
+			) AS ranks
+		) AS subquery
+		WHERE user_id = '${username}';
+		`);
+
+		return {
+			notFound: user.rows.length === 0,
+			user: user.rows[0] as UserRecord,
+			// @ts-ignore
+			testCount: test.rows[0]["count(*)"],
+			rankMonthly: rankMonthly.rows.length
+				? // @ts-ignore
+				  rankMonthly.rows[0]["best_rank"]
+				: -1,
+			rankAllTime: rankAllTime.rows.length
+				? // @ts-ignore
+				  rankAllTime.rows[0]["best_rank"]
+				: -1,
+		};
+	});
 
 	return {
-		props: {
-			user: user,
-			notFound: false,
-		},
+		props: _result,
 	};
 };
+
+function getRankText(rank: number) {
+	if (rank <= 0) return "NaN";
+	return `# ${Intl.NumberFormat("en-US").format(rank)}`;
+}
