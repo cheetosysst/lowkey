@@ -55,7 +55,9 @@ export default function Home() {
 				<div className="container mx-auto flex justify-center">
 					<form onSubmit={loginHandler}>
 						<div className="my-4">
-							<label id="email">Email / Username</label>
+							<label className="text-slate-100" id="email">
+								Email / Username
+							</label>
 							<br />
 							<input
 								type="text"
@@ -66,7 +68,9 @@ export default function Home() {
 							/>
 						</div>
 						<div className="my-4">
-							<label id="password">Password</label>
+							<label className="text-slate-100" id="password">
+								Password
+							</label>
 							<br />
 							<input
 								type="password"

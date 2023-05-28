@@ -13,7 +13,7 @@ export const FormElement = ({
 	id: string;
 }) => (
 	<div className="mb-4 flex flex-col" {...props}>
-		<label className={``} htmlFor={id}>
+		<label className={`text-slate-100`} htmlFor={id}>
 			{text}
 		</label>
 		<input
