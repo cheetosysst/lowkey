@@ -41,6 +41,25 @@ const ButtonNavbar = ({
 	</Button>
 );
 
+const ButtonRed = ({
+	children,
+	href,
+	className,
+	onClick,
+	...props
+}: ButtonProp) => (
+	<Button
+		className={`rounded-md bg-red-800 p-2 text-slate-100 transition-all hover:bg-red-500 ${
+			className ? className : ""
+		}`}
+		href={href}
+		onClick={onClick}
+		{...props}
+	>
+		{children}
+	</Button>
+);
+
 const ButtonTransparent = ({
 	children,
 	className,
@@ -70,4 +89,4 @@ function ArticleLink({ name, href, ...props }: { name: string; href: string }) {
 	);
 }
 
-export { Button, ButtonNavbar, ButtonTransparent, ArticleLink };
+export { Button, ButtonNavbar, ButtonTransparent, ButtonRed, ArticleLink };

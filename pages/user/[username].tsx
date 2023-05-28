@@ -4,6 +4,11 @@ import conn from "../../libs/database";
 import { getLevel } from "../../libs/level";
 import { getMonthStart } from "../../libs/misc";
 import { CommonHead } from "../../components/meta";
+import { useContext } from "react";
+import { AuthContext } from "../../libs/auth";
+import { Button, ButtonRed } from "../../components/button.components";
+import { getBaseUrl } from "../../libs/url";
+import { useRouter } from "next/router";
 
 type UserRecord = {
 	id: string;
@@ -16,12 +21,27 @@ type UserRecord = {
 export default function Page(
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+	const { state, dispatch } = useContext(AuthContext);
+	const router = useRouter();
+
 	if (props.notFound)
 		return (
 			<MainLayout>
 				<div className="container mx-auto">Not Found</div>
 			</MainLayout>
 		);
+
+	const banHandler = () => {
+		fetch(`${getBaseUrl()}/api/ban`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				target: props.user?.id,
+			}),
+		})
+			.then((res) => (res.status === 200 ? router.push(`/`) : res.json()))
+			.then((data) => console.error(data));
+	};
 
 	return (
 		<MainLayout>
@@ -64,6 +84,17 @@ export default function Page(
 							value={`${props.user!.exp} pt`}
 						/>
 					</div>
+					{state.isAdmin ? (
+						<ButtonRed
+							href="#"
+							onClick={banHandler}
+							className="mt-3"
+						>
+							Ban
+						</ButtonRed>
+					) : (
+						<></>
+					)}
 				</div>
 				<div className="mt-8 flex justify-evenly rounded-lg border-[1px] border-white/20 p-6 transition-colors duration-200 hover:border-white/40">
 					<div>
