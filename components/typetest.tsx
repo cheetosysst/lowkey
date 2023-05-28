@@ -165,6 +165,7 @@ export default function TypeTest({ endpoint }: { endpoint: TestEndPoint }) {
 				type: "submit",
 			});
 			resetTest();
+			inputRef.current!.value = "";
 		}
 	};
 
