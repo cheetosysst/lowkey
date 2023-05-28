@@ -1,10 +1,11 @@
 import Router from "next/router";
 import MainLayout from "../components/main.layout";
-import { FormEvent, FormEventHandler, useContext } from "react";
+import { FormEvent, FormEventHandler, useContext, useState } from "react";
 import { AuthContext } from "../libs/auth";
 import { getBaseUrl } from "../libs/url";
 import { ButtonTransparent } from "../components/button.components";
 import { CommonHead } from "../components/meta";
+import { WarningMessage } from "../components/message";
 
 interface loginEventHandler extends HTMLFormElement {
 	username: HTMLInputElement;
@@ -13,6 +14,8 @@ interface loginEventHandler extends HTMLFormElement {
 
 export default function Home() {
 	const auth = useContext(AuthContext);
+	const [formError, setFormError] = useState(false);
+	const [formErrorMessage, setFormErrorMessage] = useState("");
 
 	if (auth.state.isAuth) {
 		Router.push("/");
@@ -41,6 +44,8 @@ export default function Home() {
 
 		if (data.message !== "Authorized") {
 			console.error("fail to authorize");
+			setFormError(true);
+			setFormErrorMessage(data.message);
 			return; // TODO Add login failed message
 		}
 
@@ -92,6 +97,9 @@ export default function Home() {
 								value={`Login`}
 							></input>
 						</div>
+						<WarningMessage show={formError}>
+							{formErrorMessage}
+						</WarningMessage>
 					</form>
 				</div>
 			</MainLayout>

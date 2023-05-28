@@ -52,6 +52,10 @@ export function AuthProvider({ children, ...props }: { children: ReactNode }) {
 		else if (data.message === "Bad credentials")
 			setAuth({ type: "CHANGE_AUTH", state: false });
 		else setAuth({ type: "CHANGE_AUTH", state: false });
+
+		if (data.isAdmin === true)
+			setAuth({ type: "CHANGE_ADMIN", state: true });
+		else setAuth({ type: "CHANGE_ADMIN", state: false });
 	};
 
 	useEffect(() => {

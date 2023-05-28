@@ -6,7 +6,8 @@ CREATE TABLE Account (
 	type ENUM("default", "admin") DEFAULT "default",
 	exp INT DEFAULT 0,
 	lvl INT DEFAULT 1,
-	create_date TIMESTAMP
+	create_date TIMESTAMP,
+	disabled BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE TypeTest (

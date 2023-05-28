@@ -6,8 +6,12 @@ import { getAuth } from "../../libs/auth";
 export default async function handler(req, res) {
 	// If user is already logged in
 
-	if (getAuth(req) !== undefined) {
-		res.status(200).json({ message: "Authorized" });
+	const auth = getAuth(req);
+	if (auth !== undefined) {
+		res.status(200).json({
+			message: "Authorized",
+			isAdmin: auth.role === "admin",
+		});
 		return;
 	}
 
@@ -22,7 +26,7 @@ export default async function handler(req, res) {
 	const result = await conn
 		.execute(
 			`
-			SELECT passwd, email, id, type
+			SELECT passwd, email, id, type, disabled
 			FROM Account
 			WHERE email = "${username}" OR id = "${username}";`
 		)
@@ -30,6 +34,11 @@ export default async function handler(req, res) {
 			console.error(err);
 			res.status(500).json(err);
 		});
+
+	if (result.rows[0].disabled === 1) {
+		res.status(401).json({ message: "banned" });
+		return;
+	}
 
 	const knownHash = result.rows[0].passwd;
 	const verified = bcrypt.compare(password, knownHash);
@@ -56,5 +65,8 @@ export default async function handler(req, res) {
 		`token=${token}; HttpOnly; Secure; Max-Age=2592000; SameSite=Strict`
 	);
 
-	res.status(200).json({ message: "Authorized" });
+	res.status(200).json({
+		message: "Authorized",
+		isAdmin: result.rows[0].type === "admin",
+	});
 }
