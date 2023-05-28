@@ -10,8 +10,10 @@ export function Table({
 	title: string;
 }) {
 	return (
-		<div className="mx-auto mb-10 w-[25em]">
-			<div className="mb-3 text-2xl">{title}</div>
+		<div className="group mx-auto mb-10 w-[25em]">
+			<div className="mb-3 text-2xl transition-all group-hover:text-white">
+				{title}
+			</div>
 			<table className="w-[25em] table-auto overflow-hidden rounded-md">
 				{children}
 			</table>
@@ -33,7 +35,7 @@ export function TableRow({ children, ...props }: { children: ReactNode }) {
 export function UserLink({ name }: { name: string }) {
 	return (
 		<Link href={`${getBaseUrl()}/user/${name}`}>
-			<a>{name}</a>
+			<a className="transition-all hover:text-white">{name}</a>
 		</Link>
 	);
 }
