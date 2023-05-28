@@ -15,7 +15,7 @@ export default function Navbar({}) {
 						</ButtonTransparent>
 					</li>
 				</ul>
-				<ul className="text-1xl m-0 flex list-none items-center space-x-4 p-0 text-gray-400">
+				<ul className="text-1xl m-0 flex list-none items-center space-x-3 p-0 text-gray-400">
 					<li>
 						<ButtonTransparent href="/">Test</ButtonTransparent>
 					</li>
@@ -32,16 +32,14 @@ export default function Navbar({}) {
 							About
 						</ButtonTransparent>
 					</li>
-					<li>
-						<LoginButton />
-					</li>
+					<LoginButtons />
 				</ul>
 			</div>
 		</>
 	);
 }
 
-const LoginButton = ({ ...props }) => {
+const LoginButtons = ({ ...props }) => {
 	const { state, dispatch } = useContext(AuthContext);
 	const isAuth = state.isAuth;
 
@@ -61,13 +59,20 @@ const LoginButton = ({ ...props }) => {
 	};
 
 	return (
-		<ButtonTransparent
-			className=""
-			onClick={logoutHandler}
-			href="#"
-			{...props}
-		>
-			{isAuth ? "Logout" : "Login"}
-		</ButtonTransparent>
+		<>
+			<li>
+				<ButtonTransparent href={`/user/`}>Profile</ButtonTransparent>
+			</li>
+			<li>
+				<ButtonTransparent
+					className=""
+					onClick={logoutHandler}
+					href="#"
+					{...props}
+				>
+					{isAuth ? "Logout" : "Login"}
+				</ButtonTransparent>
+			</li>
+		</>
 	);
 };
