@@ -1,17 +1,10 @@
 import Head from "next/head";
 import MainLayout from "../components/main.layout";
-import {
-	Component,
-	FC,
-	ReactElement,
-	ReactNode,
-	useEffect,
-	useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { getBaseUrl } from "../libs/url";
-import Link from "next/link";
 import { CommonHead } from "../components/meta";
 import type { DuelEntry, TestsEntry } from "./api/test/leaderboard";
+import { TableRow, Table, UserLink } from "../components/table";
 
 type BoardData = {
 	top10: Array<TestsEntry>;
@@ -48,28 +41,6 @@ export default function Page() {
 				</div>
 			</MainLayout>
 		</>
-	);
-}
-
-function Table({ children, title }: { children: ReactNode; title: string }) {
-	return (
-		<div className="mx-auto mb-10 w-[25em]">
-			<div className="mb-3 text-2xl">{title}</div>
-			<table className="w-[25em] table-auto overflow-hidden rounded-md">
-				{children}
-			</table>
-		</div>
-	);
-}
-
-function TableRow({ children, ...props }: { children: ReactNode }) {
-	return (
-		<tr
-			className={`border-b-2 border-white/10 leading-10 transition-all duration-75 hover:bg-slate-700/20`}
-			{...props}
-		>
-			{children}
-		</tr>
 	);
 }
 
@@ -128,8 +99,7 @@ function TableDuel({ data }: { data: Array<DuelEntry> | undefined }) {
 					})
 			  )
 			: data
-	).map((item, index, arr) => {
-		console.log(arr);
+	).map((item, index) => {
 		return (
 			<TableRow key={`duelentry-${index}`}>
 				<TableEntryDuel data={item} />
@@ -184,13 +154,5 @@ function TableEntryDuel({ data }: { data: DuelEntry }) {
 					: "-"}
 			</td>
 		</>
-	);
-}
-
-function UserLink({ name }: { name: string }) {
-	return (
-		<Link href={`${getBaseUrl()}/user/${name}`}>
-			<a>{name}</a>
-		</Link>
 	);
 }
