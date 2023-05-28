@@ -50,7 +50,7 @@ export default function Page(
 					</div>
 					<div className="flex flex-col rounded-md bg-white/10 p-4 transition-all hover:bg-gray-300/20 hover:drop-shadow-md">
 						<BioData text="test count" value={props.testCount} />
-						<BioData text="dual count" value={-1} />
+						<BioData text="dual count" value={props.duelCount} />
 					</div>
 					<div className="flex flex-col rounded-md bg-white/10 p-4 transition-all hover:bg-gray-300/20 hover:drop-shadow-md">
 						<BioData
@@ -116,6 +116,7 @@ export const getServerSideProps: GetServerSideProps<{
 	testCount: number;
 	rankMonthly: number;
 	rankAllTime: number;
+	duelCount: number;
 }> = async ({ params }) => {
 	const username: string | string[] | undefined = params?.username;
 
@@ -127,6 +128,10 @@ export const getServerSideProps: GetServerSideProps<{
 		);
 		const test = await tx.execute(
 			`SELECT COUNT(*) FROM TypeTest WHERE user_id="${username}";`
+		);
+
+		const duel = await tx.execute(
+			`SELECT COUNT(*) as duel_count FROM Duel WHERE player1="${username}" OR player2="${username}";`
 		);
 
 		const monthStart = getMonthStart();
@@ -164,6 +169,8 @@ export const getServerSideProps: GetServerSideProps<{
 			user: user.rows[0] as UserRecord,
 			// @ts-ignore
 			testCount: test.rows[0]["count(*)"],
+			// @ts-ignore
+			duelCount: duel.rows[0]["duel_count"],
 			rankMonthly: rankMonthly.rows.length
 				? // @ts-ignore
 				  rankMonthly.rows[0]["best_rank"]
