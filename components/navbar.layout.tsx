@@ -60,9 +60,15 @@ const LoginButtons = ({ ...props }) => {
 
 	return (
 		<>
-			<li>
-				<ButtonTransparent href={`/user/`}>Profile</ButtonTransparent>
-			</li>
+			{isAuth ? (
+				<li>
+					<ButtonTransparent href={`/user/`}>
+						Profile
+					</ButtonTransparent>
+				</li>
+			) : (
+				<></>
+			)}
 			<li>
 				<ButtonTransparent
 					className=""
