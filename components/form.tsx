@@ -41,7 +41,7 @@ export const FormPassword = ({
 		type="password"
 		id={id}
 		text={text}
-		pattern="^(?=[!-~])[\W_]|\w{1,64}$"
+		pattern="^.{1,64}$"
 		{...props}
 	/>
 );
